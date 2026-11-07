@@ -118,12 +118,12 @@
   {
    "trigger_turn": null,
    "type": "unanswered_concern",
-   "rationale": "His wife asked whether he can keep working. It was never answered.",
+   "rationale": "The patient asked whether he can keep working. It was never answered.",
    "evidence": [
     {
      "source": "transcript",
      "ref": "5",
-     "quote": "Will he still be able to work?"
+     "quote": "Will I still be able to work?"
     }
    ]
   }

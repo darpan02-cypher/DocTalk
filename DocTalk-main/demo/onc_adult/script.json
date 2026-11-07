@@ -2,12 +2,12 @@
  "visit_id": "demo-onc-adult-01",
  "chart_id": "chart-onc-adult-01",
  "synthetic": true,
- "profile_id": "adult_new_dx_caregiver",
+ "profile_id": "adult_new_dx_alone",
  "turns": [
   {
    "idx": 0,
    "speaker": "clinician",
-   "text": "Mr. Reyes, Mrs. Reyes, thank you for coming in. Your pathology report is back, and I want to go over it and the next steps with you."
+   "text": "Mr. Reyes, thank you for coming in. Your pathology report is back, and I want to go over it and the next steps with you."
   },
   {
    "idx": 1,
@@ -31,8 +31,8 @@
   },
   {
    "idx": 5,
-   "speaker": "caregiver",
-   "text": "Will he still be able to work? He drives a truck."
+   "speaker": "patient",
+   "text": "Will I still be able to work? I drive a truck."
   },
   {
    "idx": 6,
