@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"conflicts\":[{\"chart_entry_id\":\"proc-stent\",\"turn_quote\":\"Heart related procedure? Sorry. No. I don't think so. I have never had heart surgery.\",\"rationale\":\"Patient states they have never had heart surgery, while the chart records a coronary artery stent placement procedure.\"}]}"}

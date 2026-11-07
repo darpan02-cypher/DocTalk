@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"supported\":true,\"reason\":\"The patient asked, \\\"What did you say about where I'm going?\\\" indicating non\u2011understanding, and the clinician's next turn did not clarify the destination, leaving the misunderstanding unrepaired.\"}"}

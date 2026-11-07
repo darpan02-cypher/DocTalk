@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"breakdowns\":[{\"turn_idx\":1,\"quote\":\"hear me clearly? Hi, doctor. Most\",\"cue\":\"repeat_request\",\"preceding_question\":\"Hi. Hi, missus Wilson. Before we begin, are you able\",\"reply_answers_question\":false}]}"}

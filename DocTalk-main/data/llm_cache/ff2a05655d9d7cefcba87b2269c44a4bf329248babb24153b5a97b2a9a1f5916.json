@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"breakdowns\":[{\"turn_idx\":18,\"quote\":\"Heart related procedure? Sorry. No. I don't think so. I have never had heart surgery.\",\"cue\":\"off_topic\",\"preceding_question\":\"Am checking your medical history now. Have you ever had any heart attack?\",\"reply_answers_question\":false}]}"}

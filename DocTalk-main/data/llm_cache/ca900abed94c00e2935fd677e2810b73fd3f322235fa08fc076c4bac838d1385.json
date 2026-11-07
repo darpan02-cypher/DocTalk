@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"supported\":false,\"reason\":\"The patient\u2019s comment \\\"I thought it was just my age.\\\" is a relevant remark, not a non\u2011understanding or off\u2011topic reply to the clinician\u2019s question, so it does not meet the comprehension_breakdown criteria.\"}"}

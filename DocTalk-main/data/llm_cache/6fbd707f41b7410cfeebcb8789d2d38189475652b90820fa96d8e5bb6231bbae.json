@@ -1,0 +1,1 @@
+{"model": "openai/gpt-oss-120b", "response": "{\"breakdowns\":[{\"turn_idx\":15,\"quote\":\"I thought it was just my age.\",\"cue\":\"off_topic\",\"preceding_question\":\"Have you noticed any shortness of breath when that happens?\",\"reply_answers_question\":false}]}"}
