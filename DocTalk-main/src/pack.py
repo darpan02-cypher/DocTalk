@@ -16,3 +16,8 @@ def load_profiles(pack_dir: Path | None = None) -> dict[str, PatientProfile]:
     d = (pack_dir or config.PACK_DIR) / "profiles"
     profs = [PatientProfile.model_validate(json.loads(f.read_text())) for f in sorted(d.glob("*.json"))]
     return {p.profile_id: p for p in profs}
+
+
+def load_gap_checks(path: Path | None = None) -> dict:
+    """Hardcoded gap-check output (flags, checklist coverage, clarify prompts) for the chest-pain pack."""
+    return json.loads((path or config.GAP_CHECKS_PATH).read_text())

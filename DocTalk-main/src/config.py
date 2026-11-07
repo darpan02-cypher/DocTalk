@@ -25,6 +25,7 @@ DATA_DIR = ROOT / "data"
 CACHE_DIR = DATA_DIR / "llm_cache"
 PACK_DIR = ROOT / "packs" / "chest_pain"
 CHECKLIST_PATH = PACK_DIR / "checklist.json"
+GAP_CHECKS_PATH = PACK_DIR / "gap_checks.json"
 
 
 class Mode(str, Enum):
