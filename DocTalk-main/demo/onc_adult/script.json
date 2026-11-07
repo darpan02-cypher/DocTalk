@@ -3,6 +3,10 @@
  "chart_id": "chart-onc-adult-01",
  "synthetic": true,
  "profile_id": "adult_new_dx_alone",
+ "patient_name": "Mr. Reyes",
+ "speaker_labels": {
+  "patient": "MR. REYES"
+ },
  "turns": [
   {
    "idx": 0,

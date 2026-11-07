@@ -3,6 +3,10 @@
  "chart_id": "chart-demo-roleplay-01",
  "synthetic": true,
  "profile_id": "hoh_lowlit_alone",
+ "patient_name": "Mrs. Wilson",
+ "speaker_labels": {
+  "patient": "MRS. WILSON"
+ },
  "turns": [
   {
    "idx": 0,

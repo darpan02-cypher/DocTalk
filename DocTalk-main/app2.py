@@ -9,6 +9,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import time
 from pathlib import Path
 
 os.environ.setdefault("STT_PORT", "8766")  # keep clear of app.py's relay port
@@ -42,6 +43,11 @@ SPEAKER_CLS = {"clinician": "doc", "patient": "pat", "caregiver": "care", "child
 SPEAKER_NAME = {"clinician": "DOCTOR", "patient": "PATIENT", "caregiver": "CAREGIVER", "child": "CHILD"}
 INPUTS = ["Typed", "Browser mic"]  # fallbacks; the orb is the live (Deepgram) capture
 MUTED = "color:var(--muted)"
+
+
+def speaker_label(role: str) -> str:
+    """Badge text: the person's name where the script gives one (e.g. MRS. WILSON), else the role."""
+    return (script.get("speaker_labels") or {}).get(role, SPEAKER_NAME[role])
 
 # ------------------------------------------------------------------- styling
 THEMES = {
@@ -141,6 +147,8 @@ def start_visit() -> None:
     ss.be = new_backend(ss.kind, ss.profile_id, ss.mode)
     ss.cfg = (ss.kind, ss.profile_id, ss.mode)
     ss.script_pos = 0
+    ss.playing = True
+    ss.last_tick = 0.0
     ss.last_mic = None
     ss.dismissed_all = False
     stt.reset_speakers()
@@ -183,6 +191,29 @@ def add_turn(speaker: str, text: str) -> None:
         ss.be.add_turn(speaker, text)
 
 
+SPEEDS = {"Slow": 4.0, "Normal": 2.5, "Fast": 1.2}
+
+
+def scripted() -> bool:
+    return ss.get("run_mode") == "Scripted"
+
+
+def autoplay_step() -> None:
+    """Scripted mode: feed the prepared script one turn at a time, then end the visit. No microphone is used."""
+    be = ss.be
+    if be.ended or not ss.playing or time.time() - ss.last_tick < SPEEDS[ss.get("speed", "Normal")]:
+        return
+    ss.last_tick = time.time()
+    turns = script["turns"]
+    if ss.script_pos < len(turns):
+        t = turns[ss.script_pos]
+        add_turn(t["speaker"], t["text"])
+        ss.script_pos += 1
+    else:
+        be.end_visit()
+        st.rerun()  # full rerun: closes the live fragments and shows the wrap-up
+
+
 # --------------------------------------------------------------------- console
 def left_panel() -> None:
     be, p = ss.be, profiles[ss.profile_id]
@@ -195,7 +226,9 @@ def left_panel() -> None:
     if p.child_present:
         tiles[2:] = [("Who is here", "Child + parent"), ("Summaries", "Parent + child")]
     tile_html = "".join(f'<div class="tile"><small>{k}</small><span>{html.escape(v)}</span></div>' for k, v in tiles)
-    body = (f'<div style="font-size:1.25rem;font-weight:700;color:var(--ink)">{chart.age}-year-old {chart.sex}</div>'
+    name = script.get("patient_name") or "Patient"
+    body = (f'<div style="font-size:1.35rem;font-weight:700;color:var(--ink)">{html.escape(name)}</div>'
+            f'<div style="font-size:.95rem;font-weight:400;color:var(--muted)">{chart.age}-year-old {chart.sex}</div>'
             f'<div style="color:var(--muted2);margin-bottom:10px">{html.escape(p.label)} · synthetic chart</div>'
             f'<div style="margin-top:12px">{tile_html}</div>'
             f'<div class="side-h">Conditions</div>{chips(by_type.get("Condition", []))}'
@@ -233,12 +266,12 @@ def transcript_panel(live: bool) -> None:
     for t in be.turns:
         badges = "".join(f' <span class="badge {TYPE_BADGE[k]}" style="display:inline-block;min-width:0">⚑ {TYPE_LABEL[k].lower()}</span>' for k in marks.get(t.idx, []))
         rows += (f'<div class="row {"hit" if t.idx in marks else ""}"><span class="ts">#{t.idx}</span>'
-                 f'<span class="badge {SPEAKER_CLS[t.speaker]}">{SPEAKER_NAME[t.speaker]}</span>'
+                 f'<span class="badge {SPEAKER_CLS[t.speaker]}">{speaker_label(t.speaker)}</span>'
                  f'<span class="txt">{html.escape(t.text)}{badges}</span></div>')
     if live and (stt.pending or stt.partial):
         role = stt.pending_role or stt.partial[0]
         text = f"{stt.pending} {stt.partial[1] if stt.partial else ''}".strip()
-        rows += (f'<div class="row partial"><span class="ts">…</span><span class="badge {SPEAKER_CLS[role]}">{SPEAKER_NAME[role]}</span>'
+        rows += (f'<div class="row partial"><span class="ts">…</span><span class="badge {SPEAKER_CLS[role]}">{speaker_label(role)}</span>'
                  f'<span class="txt">{html.escape(text)}</span></div>')
     if not rows:
         rows = f'<div class="row"><span class="txt" style="{MUTED}">Waiting for the first line. Speak, type, or play the next scripted line.</span></div>'
@@ -372,7 +405,7 @@ def evaluation_view() -> None:
 
 def input_controls() -> None:
     be = ss.be
-    if be.ended:
+    if be.ended or scripted():
         return
     mode = ss.input if DEV else "Typed"
     if not DEV:
@@ -408,6 +441,21 @@ def right_panel() -> None:
     be = ss.be
     on = not be.ended
     st.markdown('<div class="side-h">Visit control</div>', unsafe_allow_html=True)
+    if scripted() and not be.ended:
+        n = len(script["turns"])
+        st.progress(min(ss.script_pos / n, 1.0), text=f"Scripted playback: turn {ss.script_pos} of {n}")
+        pa, pb = st.columns(2)
+        if pa.button("⏸ Pause" if ss.playing else "▶ Play", key="pp"):
+            ss.playing = not ss.playing
+            ss.last_tick = 0.0
+            refresh()
+        if pb.button("⏭ Next line", key="nx", disabled=ss.script_pos >= n):
+            ss.last_tick = 0.0
+            ss.playing = False
+            add_turn(script["turns"][ss.script_pos]["speaker"], script["turns"][ss.script_pos]["text"])
+            ss.script_pos += 1
+            refresh()
+        st.radio("Speed", list(SPEEDS), horizontal=True, key="speed", index=1)
     if DEV and st.button("▶ Play next scripted line", key="play", disabled=be.ended, help="Rehearsal helper: sends the next prepared line"):
         pos = ss.script_pos
         if pos < len(script["turns"]):
@@ -437,6 +485,20 @@ def right_panel() -> None:
         st.rerun()
     ss._view_seen = ss.view
 
+    st.markdown('<div class="side-h">Mode</div>', unsafe_allow_html=True)
+    st.segmented_control("Run mode", ["Demo", "Live", "Scripted"], key="run_mode", label_visibility="collapsed", on_change=apply_run_mode,
+                         help="Demo: prepared scenario, you speak or type. Live: real AI agents on your own conversation. Scripted: the prepared visit plays by itself, no microphone.")
+    if ss.run_mode == "Live" and not LIVE_READY:
+        st.caption("Live needs GROQ_API_KEY or GEMINI_API_KEY; results will fail until one is set.")
+    elif ss.run_mode == "Scripted":
+        st.caption("Plays the prepared visit by itself. No microphone, no API calls.")
+    elif ss.run_mode != "Live":
+        st.caption("Demo: prepared scenario.")
+    if ss.get("_mode_seen", ss.run_mode) != ss.run_mode:  # orb and layout live outside this fragment, so redraw the whole page
+        ss._mode_seen = ss.run_mode
+        st.rerun()
+    ss._mode_seen = ss.run_mode
+
     if DEV:
         st.markdown('<div class="side-h">Dev: gap checks</div>', unsafe_allow_html=True)
         keys = list(ss.det)
@@ -465,14 +527,26 @@ def console() -> None:
 
     @st.fragment(run_every=1 if live else None)
     def main() -> None:
+        if ss.get("module_changed"):  # module just switched: redraw the whole page before any panel reads stale data
+            st.rerun()
         be = ss.be
         if live and not be.ended:
-            for role, text in stt.collect([(t.speaker, t.text) for t in be.turns]):
-                add_turn(role, text)
+            if scripted():
+                autoplay_step()
+            else:
+                for role, text in stt.collect([(t.speaker, t.text) for t in be.turns]):
+                    add_turn(role, text)
         L, M = st.columns([4.2, 5.4], gap="medium")
         with L:
             left_panel()
         with M:
+            st.markdown('<div class="side-h" style="margin-top:0">Condition module</div>', unsafe_allow_html=True)
+            st.selectbox("Condition module", list(MODULES), key="module", format_func=lambda k: MODULES[k].label,
+                         label_visibility="collapsed", on_change=apply_module)
+            if ss.get("_module_seen", ss.module) != ss.module:  # left panel and checklist are built outside this widget's data, so redraw the whole page
+                ss._module_seen = ss.module
+                st.rerun()
+            ss._module_seen = ss.module
             if ss.view == "Prepare":
                 prepare_view()
             elif ss.view == "Patient":
@@ -499,10 +573,15 @@ def console() -> None:
 
     @st.fragment(run_every=1 if live else None)
     def side() -> None:
+        if ss.get("module_changed"):
+            st.rerun()
         right_panel()
 
     with side_col:
-        if live:
+        if live and scripted():
+            st.markdown('<div class="orb-wrap"><div class="orb off"></div><div class="orb-label off">SCRIPTED PLAYBACK</div></div>', unsafe_allow_html=True)
+            st.caption("The prepared visit plays by itself. No microphone is used.")
+        elif live:
             if not HOSTED:
                 stt.start()
                 components.html(orb_html(bool(ss.get("dark"))), height=170)  # outside the fragments so it never remounts
@@ -517,25 +596,15 @@ def console() -> None:
 def apply_run_mode() -> None:
     if ss.run_mode is None:  # segmented control can be deselected
         ss.run_mode = "Demo"
-    ss.kind, ss.mode = ("Engine", "LIVE") if ss.run_mode == "Live" else ("Scripted", "DEMO")
+    ss.kind, ss.mode = ("Engine", "LIVE") if ss.run_mode == "Live" else ("Scripted", "DEMO")  # Demo and Scripted share the hardcoded backend
     start_visit()
 
 
 def apply_module() -> None:
-    ss.profile_id = None  # the top of the next run picks the new module's first profile
-    ss.module_changed = True
+    ss.module_changed = True  # the next full run reloads the module's data, picks its first profile and restarts the visit
 
 
-_logo, _mod, _mode, _tog = st.columns([4, 3, 4, 1], vertical_alignment="center")
-_mod.selectbox("Condition module", list(MODULES), key="module", format_func=lambda k: MODULES[k].label,
-               label_visibility="collapsed", on_change=apply_module)
+_logo, _tog = st.columns([9, 1], vertical_alignment="center")
 _logo.image(str(ROOT / "landing" / "logo" / "doctalk-logo.jpg"), width=200)
-with _mode:
-    st.segmented_control("Run mode", ["Demo", "Live"], key="run_mode", label_visibility="collapsed", on_change=apply_run_mode,
-                         help="Demo: prepared, hardcoded scenario, no network. Live: real AI agents on your own conversation.")
-    if ss.run_mode == "Live" and not LIVE_READY:
-        st.caption("Live needs GROQ_API_KEY or GEMINI_API_KEY; results will fail until one is set.")
-    elif ss.run_mode != "Live":
-        st.caption("Demo: prepared scenario, no API calls.")
 _tog.toggle("🌙 Dark", key="dark")
 console()

@@ -3,6 +3,11 @@
  "chart_id": "chart-onc-peds-01",
  "synthetic": true,
  "profile_id": "peds_child7_parent",
+ "patient_name": "Mia Alvarez",
+ "speaker_labels": {
+  "child": "MIA",
+  "caregiver": "PARENT"
+ },
  "turns": [
   {
    "idx": 0,

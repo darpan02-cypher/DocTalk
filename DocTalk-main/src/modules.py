@@ -65,8 +65,8 @@ class Module:
 MODULES: dict[str, Module] = {
     "chest_pain": Module(
         key="chest_pain",
-        label="Chest pain (adult)",
-        checklist_title="Chest-pain checklist coverage",
+        label="Cardiology",
+        checklist_title="Cardiology checklist coverage",
         source_note="2021 AHA/ACC chest pain guideline.",
         pack_dir=ROOT / "packs" / "chest_pain",
         demo_dir=ROOT / "demo",
@@ -75,8 +75,8 @@ MODULES: dict[str, Module] = {
     ),
     "onc_adult": Module(
         key="onc_adult",
-        label="Cancer: adult treatment plan",
-        checklist_title="Cancer treatment-visit checklist",
+        label="Oncology",
+        checklist_title="Oncology checklist coverage",
         source_note="Draft topics from common oncology communication guidance. Not yet clinician-reviewed.",
         pack_dir=ROOT / "packs" / "onc_adult",
         demo_dir=ROOT / "demo" / "onc_adult",
@@ -85,8 +85,8 @@ MODULES: dict[str, Module] = {
     ),
     "onc_peds": Module(
         key="onc_peds",
-        label="Cancer: child with parent",
-        checklist_title="Pediatric cancer visit checklist",
+        label="Pediatric oncology",
+        checklist_title="Pediatric oncology checklist coverage",
         source_note="Draft topics from common pediatric oncology family-communication guidance. Not yet clinician-reviewed.",
         pack_dir=ROOT / "packs" / "onc_peds",
         demo_dir=ROOT / "demo" / "onc_peds",
