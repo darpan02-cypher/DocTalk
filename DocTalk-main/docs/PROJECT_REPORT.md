@@ -1,8 +1,8 @@
-# Dr.Listner: catching what the visit missed
+# DocTalk: catching what the visit missed
 
 Oct 15, 2026 (updated Oct 19, 2026) · @himanshi
 
-AI scribes record what was said; Dr.Listner flags what was never asked, answered or understood, and hands the patient a plain-language plan they can actually follow. IEEE Hack for Humanity, Track 2: AI for Accessibility and Disability Inclusion.
+AI scribes record what was said; DocTalk flags what was never asked, answered or understood, and hands the patient a plain-language plan they can actually follow. IEEE Hack for Humanity, Track 2: AI for Accessibility and Disability Inclusion.
 
 ## The problem
 
@@ -22,7 +22,7 @@ Roughly 1 in 20 US adults is misdiagnosed in outpatient care each year, and the 
 
 Ambient scribes are built to document the conversation; nobody is checking the conversation itself for what is missing, and no one is writing for the patient.
 
-|  | Ambient AI scribes today | Dr.Listner |
+|  | Ambient AI scribes today | DocTalk |
 |---|---|---|
 | Core job | Draft the visit note from what was said | Flag what was not said, not resolved or not understood |
 | Known failure | Omissions and made-up content in the note; omissions were the top error in a 356-note audit (64 notes, 18%) (JMIR Med Inform, 2026) | Misses are surfaced with the transcript line that triggered them, so the clinician can verify in seconds |
@@ -30,7 +30,7 @@ Ambient scribes are built to document the conversation; nobody is checking the c
 | Patient experience | Notes written for clinicians | Plain-language care summary, captions, read-aloud, questions to ask next time |
 | Who it helps most | Clinician workload | Patients with hearing loss, low health literacy or cognitive impairment |
 
-Caveat: this compares the category as described in published audits; we have not audited individual vendors. Scribe omissions (things said but dropped from the note) are a different problem from visit omissions (things that should have been asked); Dr.Listner targets the second.
+Caveat: this compares the category as described in published audits; we have not audited individual vendors. Scribe omissions (things said but dropped from the note) are a different problem from visit omissions (things that should have been asked); DocTalk targets the second.
 
 ## Goal
 
@@ -50,7 +50,7 @@ Draft targets, to be confirmed against the first eval run:
 
 ## Solution
 
-Dr.Listner reads a visit transcript turn by turn against a published checklist and the patient's chart. During the visit it shows only passive coverage ticks and badges; at wrap-up it produces two outputs.
+DocTalk reads a visit transcript turn by turn against a published checklist and the patient's chart. During the visit it shows only passive coverage ticks and badges; at wrap-up it produces two outputs.
 
 Four gap types
 
@@ -83,7 +83,7 @@ Surfacing rules
 
 ## How it works
 
-Dr.Listner pipeline · turn-by-turn engine, 4 detectors, 1 verifier, 2 outputs
+DocTalk pipeline · turn-by-turn engine, 4 detectors, 1 verifier, 2 outputs
 
 1. Input. A `TurnSource` feeds speaker-labeled turns (`clinician | patient | caregiver`, optional timestamps). Only replay of synthetic transcripts is implemented; typed and microphone input are being added for the role-play demo (see Live role-play demo).
 2. De-identification. Each turn is scrubbed with Presidio and spaCy before any hosted call. Dates are kept because onset and follow-up timing are clinical, and cardiac drug names are protected from being tagged as people.
@@ -117,7 +117,7 @@ Python end to end, free or open-source pieces only, chosen so a two-person team 
 
 ## Evaluation plan
 
-The proof is a number: how many planted gaps Dr.Listner finds, and how many false flags it raises per visit.
+The proof is a number: how many planted gaps DocTalk finds, and how many false flags it raises per visit.
 
 Dataset (built, `data/eval/`)
 
@@ -193,7 +193,7 @@ Written for the patient, in large type, with high contrast.
 ### Tab 4: Evaluation (judge-facing)
 
 - Results tables from `eval/results/*.json`: per-type TP/FP/FN, precision, recall, F1 with Wilson intervals, false flags per visit, clean-visit false flags, too-early flags, and turns-to-detection. The UI formats saved values only and never computes a score.
-- System selector: Dr.Listner versus the scribe-style baseline once both are run.
+- System selector: DocTalk versus the scribe-style baseline once both are run.
 - Error explorer: the FP and FN exports with each missed gap and false flag next to its transcript lines.
 - Fake runs are labeled "HARNESS CHECK, NOT ACCURACY" until real runs replace them.
 - Limits panel: synthetic data, hand-authored charts, no clinician review, small per-type counts, comprehension cues are our own draft.
@@ -215,7 +215,7 @@ Written for the patient, in large type, with high contrast.
 
 ## Live role-play demo (final demo plan)
 
-Two people, one playing the clinician and one the patient, talk through a prepared script while Dr.Listner listens and reacts as if live. The demo is partly hardcoded on purpose, and the report says so: the point is to show the full end-to-end experience reliably, and the measured numbers come from the eval harness, not from this demo.
+Two people, one playing the clinician and one the patient, talk through a prepared script while DocTalk listens and reacts as if live. The demo is partly hardcoded on purpose, and the report says so: the point is to show the full end-to-end experience reliably, and the measured numbers come from the eval harness, not from this demo.
 
 ### What the audience sees
 

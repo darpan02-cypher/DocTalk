@@ -1,4 +1,4 @@
-"""Dr.Listner Streamlit demo. Synthetic data only; not a medical device.
+"""DocTalk Streamlit demo. Synthetic data only; not a medical device.
 
 Run: streamlit run app.py
 Backends: Scripted (hardcoded, safe on stage) or Engine (real agents on the LLM cache or live providers).
@@ -28,7 +28,7 @@ TYPE_LABEL = {
 }
 TYPE_ICON = {"missed_question": "❓", "unanswered_concern": "💬", "chart_contradiction": "📋", "comprehension_breakdown": "👂"}
 
-st.set_page_config(page_title="Dr.Listner", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="DocTalk", page_icon=str(ROOT / "landing" / "logo" / "favicon.png"), layout="wide")
 
 
 @st.cache_resource
@@ -56,7 +56,7 @@ def new_backend(kind: str, profile_id: str, mode: str):
 checklist, profiles, chart, script = _static()
 stt = _stt()
 with st.sidebar:
-    st.title("🩺 Dr.Listner")
+    st.image(str(ROOT / "landing" / "logo" / "doctalk-logo.jpg"), width=240)
     kind = st.radio("Backend", ["Scripted (hardcoded demo)", "Engine (real agents)"], help="Scripted reacts only to the prepared script and needs no network.")
     mode = "DEMO"
     if kind.startswith("Engine"):
@@ -95,7 +95,7 @@ st.markdown(
     </style>""",
     unsafe_allow_html=True,
 )
-st.warning("Synthetic demo. Dr.Listner checks documentation completeness only. It does not diagnose or recommend treatment.", icon="⚠️")
+st.warning("Synthetic demo. DocTalk checks documentation completeness only. It does not diagnose or recommend treatment.", icon="⚠️")
 
 tab_live, tab_wrap, tab_patient, tab_eval = st.tabs(["Live visit", "Wrap-up", "Patient view", "Evaluation"])
 

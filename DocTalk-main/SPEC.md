@@ -1,4 +1,4 @@
-# Dr.Listner SPEC (v0.3, master prompt v2 + Phase 3 implementation)
+# DocTalk SPEC (v0.3, master prompt v2 + Phase 3 implementation)
 
 Contracts only. Scope and rationale live in `docs/PROJECT_REPORT.md`. Code in `src/schemas.py` is normative for field names; this file is normative for semantics.
 

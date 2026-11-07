@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dr.Listner — Catching what the visit missed</title>
-<meta name="description" content="AI scribes record what was said. Dr.Listner flags what was never asked or understood, and gives the patient a plain-language plan.">
-<link rel="icon" href="logo/favicon.ico">
+<title>DocTalk — Catching what the visit missed</title>
+<meta name="description" content="AI scribes record what was said. DocTalk flags what was never asked or understood, and gives the patient a plain-language plan.">
+<link rel="icon" type="image/png" href="logo/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -199,7 +199,7 @@ footer{padding:36px 0 48px;color:var(--muted);font-size:.84rem;text-align:center
 
 <nav>
   <div class="wrap">
-    <a class="logo" href="#" aria-label="Dr. Listener"><img src="logo/dr-listener-logo.svg" alt="Dr. Listener"></a>
+    <a class="logo" href="#" aria-label="DocTalk"><img src="logo/doctalk-logo.jpg" alt="DocTalk"></a>
     <div class="links">
       <a href="#problem">Problem</a><a href="#how">How It Works</a><a href="#gaps">Gap Types</a><a href="#tech">Tech Stack</a><a href="#who">Who It Helps</a>
     </div>
@@ -212,7 +212,7 @@ footer{padding:36px 0 48px;color:var(--muted);font-size:.84rem;text-align:center
     <div>
       <span class="badge">CROWN HACKS 2026</span>
       <h1>Catching what the <em>visit missed.</em></h1>
-      <p class="lead">AI scribes record what was said. Dr.Listner <b>flags what was never asked, answered or understood</b></p>
+      <p class="lead">AI scribes record what was said. DocTalk <b>flags what was never asked, answered or understood</b></p>
       <div class="cta">
         <a class="btn primary" href="#" data-console>▷ Launch Console</a>
         <a class="btn ghost" href="#how">See How It Works →</a>
@@ -318,7 +318,7 @@ footer{padding:36px 0 48px;color:var(--muted);font-size:.84rem;text-align:center
         <div class="orch-l">
           <div>
             <div class="pill-badge">COORDINATOR</div>
-            <h3>Dr.Listner Coordinator</h3>
+            <h3>DocTalk Coordinator</h3>
             <p>Follows the conversation turn by turn. Quick checks run live; omission checks wait until the wrap-up, so the clinician is never interrupted mid-sentence.</p>
           </div>
           <div class="tags"><span>Quiet during the visit</span><span>Rule-based</span><span>6 specialists</span></div>
@@ -416,13 +416,13 @@ footer{padding:36px 0 48px;color:var(--muted);font-size:.84rem;text-align:center
 </section>
 
 <footer>
-  <div class="wrap"><img src="logo/dr-listener-mark.svg" alt="" style="height:34px;display:block;margin:0 auto 14px">Prototype using synthetic data only. Not a medical device. No HIPAA claim. · Dr.Listner · IEEE Hack for Humanity, Track 2</div>
+  <div class="wrap"><img src="logo/doctalk-mark.jpg" alt="" style="height:34px;display:block;margin:0 auto 14px">Prototype using synthetic data only. Not a medical device. No HIPAA claim. · DocTalk · IEEE Hack for Humanity, Track 2</div>
 </footer>
 
 <script>
   // Point this at the running Streamlit console (e.g. streamlit run app2.py).
-  // Set to the deployed Streamlit URL (e.g. https://dr-listener.streamlit.app); localhost is used when this page is opened locally.
-  const DEPLOYED_CONSOLE_URL = "https://dr-listener.streamlit.app";
+  // Set to the deployed Streamlit URL (e.g. https://doctalk.streamlit.app); localhost is used when this page is opened locally.
+  const DEPLOYED_CONSOLE_URL = "https://doctalk.streamlit.app";
   const CONSOLE_URL = ["localhost", "127.0.0.1", ""].includes(location.hostname) ? "http://localhost:8501" : DEPLOYED_CONSOLE_URL;
   document.querySelectorAll("[data-console]").forEach(a => a.href = CONSOLE_URL);
 </script>

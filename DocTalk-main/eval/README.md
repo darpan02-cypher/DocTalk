@@ -1,4 +1,4 @@
-# Dr.Listner evaluation harness
+# DocTalk evaluation harness
 
 This harness scores saved flags against synthetic answer keys. It uses Python's
 standard library and Pydantic; it makes no model or network calls. The committed

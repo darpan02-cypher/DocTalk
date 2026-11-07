@@ -1,4 +1,4 @@
-"""Dr.Listner live console (landing page is landing/index.html), wired to the real backends.
+"""DocTalk live console (landing page is landing/index.html), wired to the real backends.
 
 Synthetic data only; not a medical device. Run: streamlit run app2.py
 Backends: Scripted (hardcoded, safe on stage) or Engine (real agents on the LLM cache or live providers).
@@ -24,7 +24,7 @@ from src.schemas import PlanItem
 from src.stt_deepgram import LiveSTT, orb_html
 
 ROOT = Path(__file__).resolve().parent
-st.set_page_config(page_title="Dr.Listner", page_icon=str(ROOT / "landing" / "logo" / "favicon.ico"), layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="DocTalk", page_icon=str(ROOT / "landing" / "logo" / "favicon.ico"), layout="wide", initial_sidebar_state="collapsed")
 
 TYPE_LABEL = {
     "missed_question": "Not asked",
@@ -464,7 +464,7 @@ def apply_run_mode() -> None:
 
 
 _logo, _mode, _tog = st.columns([5, 4, 1], vertical_alignment="center")
-_logo.image(str(ROOT / "landing" / "logo" / ("dr-listener-logo-dark.svg" if ss.get("dark") else "dr-listener-logo.svg")), width=190)
+_logo.image(str(ROOT / "landing" / "logo" / "doctalk-logo.jpg"), width=200)
 with _mode:
     st.segmented_control("Run mode", ["Demo", "Live"], key="run_mode", label_visibility="collapsed", on_change=apply_run_mode,
                          help="Demo: prepared, hardcoded scenario, no network. Live: real AI agents on your own conversation.")
