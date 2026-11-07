@@ -1,0 +1,14 @@
+{
+ "note": "Plan items and summary for the adult oncology demo. Says only what was said in the visit; gaps become questions.",
+ "plan_items": [
+  {
+   "item_id": "chemo",
+   "text": "Chemotherapy called FOLFOX, every two weeks for about three to six months, starting in two weeks."
+  },
+  {
+   "item_id": "nurse",
+   "text": "A nurse navigator named Maria will call this week."
+  }
+ ],
+ "summary": "You had surgery for colon cancer. The lab found cancer cells in 3 of 14 lymph nodes. This is called stage three.\n\nYour plan:\n1. Chemotherapy called FOLFOX. It lowers the chance the cancer comes back.\n2. Every two weeks for about three to six months.\n3. It starts in two weeks. Blood is drawn first.\n4. A nurse named Maria will call you this week.\n\nCommon side effects: feeling sick, feeling tired, and numb or tingling hands and feet, most in the cold. You will get medicine for the sick feeling.\n\nQuestions to ask your team:\n- Which signs mean I call you, and what number do I use at night?\n- Does a pump go home with me, and for how long?\n- My chart says I have nerve trouble in my feet. Does that matter with this chemo?\n- Is blood thinner medicine on my chart? Does it matter with chemo?\n- Can I keep working?\n- Are there other options?"
+}

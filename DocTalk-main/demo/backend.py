@@ -44,6 +44,13 @@ class Backend:
     summary: str = ""
     summary_grade: float | None = None
     clarify: list[str] = field(default_factory=list)
+    gc: dict | None = None  # gap-check output for the active module (default: chest pain)
+    plan: dict | None = None  # summary + plan items for the active module
+    child_summary: str = ""
+    child_summary_grade: float | None = None
+
+    def _gc(self) -> dict:
+        return self.gc if self.gc is not None else load_gap_checks()
 
     def add_turn(self, speaker: str, text: str) -> Turn:  # pragma: no cover - interface
         raise NotImplementedError
@@ -88,7 +95,7 @@ class Backend:
         A flag with trigger_turn N shows once N+1 turns exist, whatever was said. Its transcript evidence is anchored to the turn whose text matches the quote.
         Omission checks (missed question, unanswered concern) wait for End visit.
         """
-        gc, n = load_gap_checks(), len(self.turns)
+        gc, n = self._gc(), len(self.turns)
         dismissed = {f.flag_id for f in self.flags if f.dismissed}
         # rebuilt every turn so each flag re-anchors to the real turn once the line is actually spoken
         self.flags = [
@@ -100,7 +107,7 @@ class Backend:
 
     def apply_gap_checks(self) -> None:
         """Replace flags, coverage and clarify prompts with the chest-pack's hardcoded gap-check output."""
-        gc = load_gap_checks()
+        gc = self._gc()
         self.flags = [self._gap_flag(i, f, max(len(self.turns) - 1, 0)) for i, f in enumerate(gc["flags"])]
         self.coverage = dict(gc["coverage"])
         self.clarify = list(gc["clarify"])
@@ -114,7 +121,7 @@ class ScriptedBackend(Backend):
 
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)
-        self.plan = load_flag_plan()
+        self.plan = self.plan if self.plan is not None else load_flag_plan()
 
     def add_turn(self, speaker: str, text: str) -> Turn:
         turn = Turn(idx=len(self.turns), speaker=speaker, text=text.strip())
@@ -125,6 +132,7 @@ class ScriptedBackend(Backend):
     def end_visit(self) -> None:
         self.apply_gap_checks()
         self.summary = self.plan["summary"]
+        self.child_summary = self.plan.get("child_summary", "")
         self.ended = True
         self._grade()
 
@@ -133,6 +141,8 @@ class ScriptedBackend(Backend):
             from src.agents.summary import reading_grade
 
             self.summary_grade = round(reading_grade(self.summary), 2)
+            if self.child_summary:
+                self.child_summary_grade = round(reading_grade(self.child_summary), 2)
         except Exception:  # textstat missing
             self.summary_grade = None
 
@@ -165,6 +175,12 @@ class EngineBackend(Backend):
         try:
             res = SummaryAgent(self.llm).run(tr, self.flags, self.plan_items, self.profile)
             self.summary, self.summary_grade = res.text, res.grade
+            p = self.profile
+            if p.child_present and p.child_summary_grade:
+                kid = p.model_copy(update={"summary_target_grade": p.child_summary_grade,
+                                           "summary_max_words": p.child_summary_max_words or 80})
+                cres = SummaryAgent(self.llm).run(tr, self.flags, self.plan_items, kid)
+                self.child_summary, self.child_summary_grade = cres.text, cres.grade
         except Exception as e:  # LLMError or missing textstat: show, do not crash the demo
             self.errors.append(f"summary: {type(e).__name__}")
         self.ended = True

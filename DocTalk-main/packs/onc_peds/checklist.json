@@ -1,0 +1,106 @@
+{
+ "checklist_id": "onc_peds_family_visit",
+ "version": "0.1",
+ "source": "Draft: topics for a pediatric oncology treatment-plan visit with parent and child. UNVERIFIED against any guideline text; needs oncologist and child-life review.",
+ "items": [
+  {
+   "id": "dx_parent",
+   "label": "Diagnosis explained to the parent",
+   "description": "Clinician explains the diagnosis in plain words.",
+   "example_questions": [
+    "Can you tell me what you understand so far?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "child_addressed",
+   "label": "Spoke directly to the child",
+   "description": "Clinician talks to the child, in age-appropriate words, not only to the parent.",
+   "example_questions": [
+    "Mia, do you know why you are here today?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "child_understanding",
+   "label": "Asked the child what they understand or fear",
+   "description": "Clinician asks the child what they think is happening and what worries them.",
+   "example_questions": [
+    "What have you been thinking about?",
+    "What questions do you have?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "treatment_plan",
+   "label": "Treatment plan and schedule",
+   "description": "Phases, medicines, clinic visits and length of treatment.",
+   "example_questions": [
+    "What happens first, and how long does it last?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "side_effects",
+   "label": "Side effects and low blood counts",
+   "description": "Clinician explains common side effects and that infections are easier to catch.",
+   "example_questions": [
+    "What changes might you see?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "when_to_call",
+   "label": "Fever and when to call",
+   "description": "Clinician gives the fever rule, other warning signs and the number to call.",
+   "example_questions": [
+    "What temperature means call us right away?",
+    "Who answers at night?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "school_life",
+   "label": "School, play and daily life",
+   "description": "Clinician talks about school, friends, play and infection precautions.",
+   "example_questions": [
+    "Can she go back to school?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  },
+  {
+   "id": "support_family",
+   "label": "Family support",
+   "description": "Child life specialist, social work, siblings, costs, parent coping.",
+   "example_questions": [
+    "Who is supporting you at home?",
+    "How is her brother doing?"
+   ],
+   "guideline_ref": null,
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Draft topic written by the team from common oncology communication practice. Not checked against a source text and not clinician-reviewed. Replace with a cited guideline item before any real use."
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "intro": "Write down worries before the visit, yours and your child’s. Bring this list.",
+ "groups": [
+  {
+   "title": "For the parent",
+   "questions": [
+    "What is the diagnosis, in plain words?",
+    "What are the phases of treatment and how long is each?",
+    "Which fever or symptoms mean I call right away, and what number do I use at night?",
+    "Can my child go to school or see friends? What precautions?",
+    "Who can help us: child life, social work, costs?",
+    "How do I talk to my child’s brother or sister?"
+   ]
+  },
+  {
+   "title": "Questions many children ask (your child can say, draw or point)",
+   "questions": [
+    "Will it hurt?",
+    "Can I still play and see my friends?",
+    "Will I lose my hair?",
+    "Did I do something to make this happen?",
+    "Will my mom or dad stay with me?"
+   ]
+  }
+ ],
+ "call_card": "Ask the care team to fill this in before you leave.\nCall right away if fever of: ____________\nOther warning signs: ____________\nDay number: ____________   Night/weekend number: ____________",
+ "child_note": "A child life specialist can help explain things to your child with play and pictures. Ask if one is available."
+}

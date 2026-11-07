@@ -1,0 +1,46 @@
+{
+ "stage": {
+  "plain": "How far the cancer has spread. Higher numbers mean it has spread further.",
+  "aliases": [
+   "stage iii",
+   "stage 3",
+   "stage three"
+  ]
+ },
+ "lymph nodes": {
+  "plain": "Small bean-shaped glands that filter fluid. Doctors check them to see if cancer cells have travelled.",
+  "aliases": [
+   "lymph node"
+  ]
+ },
+ "pathology": {
+  "plain": "The lab's study of the tissue taken out in surgery.",
+  "aliases": []
+ },
+ "chemotherapy": {
+  "plain": "Strong medicine that kills fast-growing cells, including cancer cells.",
+  "aliases": [
+   "chemo"
+  ]
+ },
+ "FOLFOX": {
+  "plain": "The name of a chemotherapy mix of three medicines, given through a vein.",
+  "aliases": []
+ },
+ "infusion": {
+  "plain": "Medicine given slowly through a thin tube into a vein.",
+  "aliases": [
+   "infusions"
+  ]
+ },
+ "neuropathy": {
+  "plain": "Tingling, numbness or pain, often in the hands and feet.",
+  "aliases": [
+   "tingling"
+  ]
+ },
+ "oncologist": {
+  "plain": "A doctor who treats cancer.",
+  "aliases": []
+ }
+}

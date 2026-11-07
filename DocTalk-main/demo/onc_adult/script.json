@@ -1,0 +1,73 @@
+{
+ "visit_id": "demo-onc-adult-01",
+ "chart_id": "chart-onc-adult-01",
+ "synthetic": true,
+ "profile_id": "adult_new_dx_caregiver",
+ "turns": [
+  {
+   "idx": 0,
+   "speaker": "clinician",
+   "text": "Mr. Reyes, Mrs. Reyes, thank you for coming in. Your pathology report is back, and I want to go over it and the next steps with you."
+  },
+  {
+   "idx": 1,
+   "speaker": "patient",
+   "text": "Okay. Just tell me straight. Did they get it all?"
+  },
+  {
+   "idx": 2,
+   "speaker": "clinician",
+   "text": "The surgeon removed the tumor. Cancer cells were in 3 of the 14 lymph nodes, so this is stage three colon cancer."
+  },
+  {
+   "idx": 3,
+   "speaker": "patient",
+   "text": "Stage three sounds really bad. Am I going to die from this?"
+  },
+  {
+   "idx": 4,
+   "speaker": "clinician",
+   "text": "We recommend chemotherapy after surgery, called FOLFOX, every two weeks for about three to six months. It lowers the chance the cancer comes back. Common side effects are nausea, tiredness, and numbness or tingling in the hands and feet."
+  },
+  {
+   "idx": 5,
+   "speaker": "caregiver",
+   "text": "Will he still be able to work? He drives a truck."
+  },
+  {
+   "idx": 6,
+   "speaker": "clinician",
+   "text": "Before we plan, are you taking any blood thinners? And do you have any numbness in your feet now?"
+  },
+  {
+   "idx": 7,
+   "speaker": "patient",
+   "text": "No blood thinners, just my blood pressure pill. And my feet are fine."
+  },
+  {
+   "idx": 8,
+   "speaker": "clinician",
+   "text": "Okay. We plan to start in two weeks. You will come in every other week, we draw blood first, and a small pump goes home with you for two days. Then the nurse will go over the paperwork."
+  },
+  {
+   "idx": 9,
+   "speaker": "patient",
+   "text": "Sorry, did you say a pump goes home with me? I didn’t catch the last part."
+  },
+  {
+   "idx": 10,
+   "speaker": "clinician",
+   "text": "The nurse will go over all of that. Any other questions?"
+  },
+  {
+   "idx": 11,
+   "speaker": "patient",
+   "text": "Okay, okay. I guess not."
+  },
+  {
+   "idx": 12,
+   "speaker": "clinician",
+   "text": "A nurse navigator named Maria will call you this week. We will see you in two weeks."
+  }
+ ]
+}

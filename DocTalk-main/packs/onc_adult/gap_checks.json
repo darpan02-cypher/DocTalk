@@ -1,0 +1,143 @@
+{
+ "note": "Hardcoded gap-check output for the scripted adult oncology visit (demo/onc_adult/script.json, 13 turns). Turn 11 ('Okay, okay') is a weak cue and is deliberately not flagged.",
+ "flags": [
+  {
+   "trigger_turn": 7,
+   "type": "chart_contradiction",
+   "rationale": "The patient said he takes no blood thinners, but the chart lists warfarin.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "7",
+     "quote": "No blood thinners"
+    },
+    {
+     "source": "chart",
+     "ref": "med-warfarin",
+     "quote": "Warfarin"
+    }
+   ]
+  },
+  {
+   "trigger_turn": 7,
+   "type": "chart_contradiction",
+   "rationale": "The patient said his feet are fine, but the chart lists diabetic peripheral neuropathy. The treatment discussed can cause numbness in the feet.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "7",
+     "quote": "my feet are fine"
+    },
+    {
+     "source": "chart",
+     "ref": "cond-dpn",
+     "quote": "Diabetic peripheral neuropathy"
+    }
+   ]
+  },
+  {
+   "trigger_turn": 9,
+   "type": "comprehension_breakdown",
+   "rationale": "The patient did not catch the part about the pump going home. The clinician did not repeat or explain it.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "9",
+     "quote": "I didn’t catch the last part."
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "comprehension_breakdown",
+   "rationale": "A multi-part plan (start date, infusion, blood draw, home pump, paperwork) was given and the patient was never asked to say it back.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "8",
+     "quote": "We plan to start in two weeks."
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "Not covered: which signs, such as a fever, mean call the team or go to the emergency room, and the number to call.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "when_to_call"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "Not covered: other options, a clinical trial, or a second opinion.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "options"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "Not asked: what matters most to the patient, such as his work.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "goals_values"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "The clinician did not ask what the patient already knew or how much he wanted to hear before giving the results.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "patient_perception"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "unanswered_concern",
+   "rationale": "The patient asked whether he is going to die. The clinician moved on to treatment without responding to the worry.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "3",
+     "quote": "Am I going to die from this?"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "unanswered_concern",
+   "rationale": "His wife asked whether he can keep working. It was never answered.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "5",
+     "quote": "Will he still be able to work?"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "dx_stage": 2,
+  "treatment_intent": 4,
+  "regimen": 4,
+  "side_effects": 4,
+  "support": 12
+ },
+ "clarify": [
+  "What fever or signs mean I call you, and what number do I use at night?",
+  "I asked if I am going to die. Can we talk about that?",
+  "Does a pump go home with me, and for how long?"
+ ]
+}

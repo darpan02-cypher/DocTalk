@@ -1,0 +1,113 @@
+{
+ "note": "Hardcoded gap-check output for the scripted pediatric oncology visit (demo/onc_peds/script.json, 14 turns).",
+ "flags": [
+  {
+   "trigger_turn": 7,
+   "type": "chart_contradiction",
+   "rationale": "The parent said Mia takes no other medicines, but the chart lists trimethoprim-sulfamethoxazole.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "7",
+     "quote": "She isn’t on any other medicines"
+    },
+    {
+     "source": "chart",
+     "ref": "med-tmp-smx",
+     "quote": "Trimethoprim-sulfamethoxazole"
+    }
+   ]
+  },
+  {
+   "trigger_turn": 9,
+   "type": "comprehension_breakdown",
+   "rationale": "The parent asked what “counts” means. The question was not answered.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "9",
+     "quote": "what does that mean, her counts?"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "Not covered: the fever rule and the number to call. This matters because chemo lowers her defences.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "when_to_call"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "The clinician never spoke directly to Mia.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "child_addressed"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "missed_question",
+   "rationale": "Nobody asked Mia what she understands or what worries her.",
+   "evidence": [
+    {
+     "source": "checklist",
+     "ref": "child_understanding"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "unanswered_concern",
+   "rationale": "Mia asked if the needle will hurt. She got a general reply, not an answer for her.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "5",
+     "quote": "Is the needle going to hurt?"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "unanswered_concern",
+   "rationale": "Mia asked whether she got sick because she was bad. It was not answered. This may need a gentle response from the team or a child life specialist.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "11",
+     "quote": "Did I get sick because I was bad?"
+    }
+   ]
+  },
+  {
+   "trigger_turn": null,
+   "type": "unanswered_concern",
+   "rationale": "The parent asked about school. The clinician put it off.",
+   "evidence": [
+    {
+     "source": "transcript",
+     "ref": "3",
+     "quote": "Will she be able to go back to school?"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "dx_parent": 2,
+  "treatment_plan": 4,
+  "side_effects": 8
+ },
+ "clarify": [
+  "What temperature or signs mean I call you, and what number do I use at night?",
+  "Can someone talk with Mia about her questions: the needle, and whether she did something wrong?",
+  "What do “counts” mean for Mia?"
+ ]
+}

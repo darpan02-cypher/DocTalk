@@ -1,0 +1,16 @@
+{
+ "profile_id": "adult_new_dx_alone",
+ "label": "Adult, new cancer diagnosis, alone, low health literacy",
+ "hearing_level": "normal",
+ "literacy": "low",
+ "caregiver_present": false,
+ "active_detectors": [
+  "missed_question",
+  "unanswered_concern",
+  "chart_contradiction",
+  "comprehension_breakdown"
+ ],
+ "summary_max_words": 170,
+ "summary_target_grade": 6.0,
+ "teach_back_questions": 2
+}

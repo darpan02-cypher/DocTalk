@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 # ---------- Transcript ----------
 class Turn(BaseModel):
     idx: int = Field(ge=0)
-    speaker: Literal["clinician", "patient", "caregiver"]
+    speaker: Literal["clinician", "patient", "caregiver", "child"]
     text: str = Field(min_length=1)
     t_start: float | None = Field(default=None, ge=0)  # seconds from visit start
     t_end: float | None = Field(default=None, ge=0)
@@ -192,6 +192,9 @@ class PatientProfile(BaseModel):
     summary_max_words: int = Field(gt=0)
     summary_target_grade: float = Field(gt=0)
     teach_back_questions: int = Field(ge=0)
+    child_present: bool = False  # pediatric visit: a child is a speaker and gets their own summary
+    child_summary_grade: float | None = Field(default=None, gt=0)
+    child_summary_max_words: int | None = Field(default=None, gt=0)
 
 
 class OpenConcern(BaseModel):

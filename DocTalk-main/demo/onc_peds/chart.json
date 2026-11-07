@@ -1,0 +1,48 @@
+{
+ "chart_id": "chart-onc-peds-01",
+ "age": 7,
+ "sex": "female",
+ "synthetic": true,
+ "entries": [
+  {
+   "entry_id": "cond-all",
+   "resource_type": "Condition",
+   "display": "Acute lymphoblastic leukemia",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "proc-port",
+   "resource_type": "Procedure",
+   "display": "Implanted venous port placement",
+   "status": "completed",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "med-merc",
+   "resource_type": "MedicationRequest",
+   "display": "Mercaptopurine",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "med-tmp-smx",
+   "resource_type": "MedicationRequest",
+   "display": "Trimethoprim-sulfamethoxazole",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "obs-anc",
+   "resource_type": "Observation",
+   "display": "Absolute neutrophil count low",
+   "status": "final",
+   "date": null,
+   "fhir": null
+  }
+ ]
+}

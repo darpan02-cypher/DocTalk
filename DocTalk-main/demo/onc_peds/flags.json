@@ -1,0 +1,19 @@
+{
+ "note": "Parent summary and child summary for the pediatric oncology demo. Only says what was said in the visit; gaps become questions.",
+ "plan_items": [
+  {
+   "item_id": "induction",
+   "text": "First phase, induction: chemo through the port, pills at home, clinic every week."
+  },
+  {
+   "item_id": "pills",
+   "text": "Mia takes mercaptopurine pills every night at bedtime."
+  },
+  {
+   "item_id": "labs",
+   "text": "Blood tests every week."
+  }
+ ],
+ "summary": "Mia has a kind of blood cancer called acute lymphoblastic leukemia. Her bone marrow was making too many unhealthy white blood cells. Treatment has several phases and lasts about two years.\n\nPhase one is called induction:\n1. Chemo through her port.\n2. Mercaptopurine pills at home every night at bedtime.\n3. Clinic visits and blood tests every week.\n\nChemo can lower her blood counts, so she can catch infections more easily. Keep her away from sick kids.\n\nQuestions to ask your team:\n- What fever or signs mean I call you, and what number do I use at night?\n- What do “counts” mean for Mia?\n- Can Mia go back to school?\n- Is the other medicine on her chart (trimethoprim-sulfamethoxazole) part of the plan?\n- Can a child life specialist talk with Mia about her questions?",
+ "child_summary": "Hi Mia! Today the grown-ups talked about how to help your body get strong.\n\nEvery night at bedtime you will take a pill. The nurses will help with your port. You will come to the clinic each week.\n\nYou asked two big questions. You asked if the needle will hurt. You asked if you got sick because you were bad. Ask your mom and your doctor to talk with you about them. Questions are always okay."
+}

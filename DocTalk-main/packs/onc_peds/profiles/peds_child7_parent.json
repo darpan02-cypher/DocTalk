@@ -1,0 +1,19 @@
+{
+ "profile_id": "peds_child7_parent",
+ "label": "Child age 7 with newly diagnosed leukemia, parent present",
+ "hearing_level": "normal",
+ "literacy": "low",
+ "caregiver_present": true,
+ "active_detectors": [
+  "missed_question",
+  "unanswered_concern",
+  "chart_contradiction",
+  "comprehension_breakdown"
+ ],
+ "summary_max_words": 170,
+ "summary_target_grade": 6.0,
+ "teach_back_questions": 2,
+ "child_present": true,
+ "child_summary_grade": 3.0,
+ "child_summary_max_words": 80
+}

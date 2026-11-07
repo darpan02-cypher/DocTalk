@@ -1,0 +1,39 @@
+{
+ "intro": "Write down worries before the visit. Bring this list. You do not have to remember everything.",
+ "groups": [
+  {
+   "title": "Understanding the diagnosis",
+   "questions": [
+    "What type and stage is my cancer, in plain words?",
+    "What does the pathology report say?",
+    "Can I get a copy of my results?"
+   ]
+  },
+  {
+   "title": "The treatment",
+   "questions": [
+    "What is the goal of this treatment?",
+    "What is the schedule and how long does it last?",
+    "What are the other options, and should I get a second opinion?",
+    "Is there a clinical trial I could join?"
+   ]
+  },
+  {
+   "title": "Side effects and safety",
+   "questions": [
+    "Which side effects are common, and which need a call right away?",
+    "What fever or symptoms mean I should call or go to the emergency room?",
+    "What number do I call at night or on weekends?"
+   ]
+  },
+  {
+   "title": "Life and support",
+   "questions": [
+    "Can I keep working or driving?",
+    "Who can help with costs, rides or the home?",
+    "Is there someone I can talk to about how I feel?"
+   ]
+  }
+ ],
+ "call_card": "Ask your care team to fill this in before you leave.\nFever or warning signs that mean call: ____________\nDay number: ____________   Night/weekend number: ____________\nGo to the emergency room if: ____________"
+}

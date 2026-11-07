@@ -1,0 +1,45 @@
+{
+ "leukemia": {
+  "plain": "A cancer of the blood. The body makes too many unhealthy white blood cells.",
+  "aliases": [
+   "acute lymphoblastic leukemia"
+  ]
+ },
+ "bone marrow": {
+  "plain": "The soft middle of bones where blood cells are made.",
+  "aliases": []
+ },
+ "induction": {
+  "plain": "The first phase of chemo. It aims to clear the leukemia from the blood.",
+  "aliases": []
+ },
+ "port": {
+  "plain": "A small device under the skin, linked to a vein, so medicine and blood tests do not need a new needle each time.",
+  "aliases": [
+   "central line"
+  ]
+ },
+ "counts": {
+  "plain": "Blood counts. They show how many infection-fighting and other cells are in the blood. Chemo can lower them.",
+  "aliases": [
+   "blood counts",
+   "neutropenia"
+  ]
+ },
+ "mercaptopurine": {
+  "plain": "A chemo medicine taken as a pill by mouth.",
+  "aliases": []
+ },
+ "chemo": {
+  "plain": "Strong medicine that kills fast-growing cells, including cancer cells.",
+  "aliases": [
+   "chemotherapy"
+  ]
+ },
+ "child life": {
+  "plain": "A specialist who uses play and pictures to help children understand and cope with hospital care.",
+  "aliases": [
+   "child life specialist"
+  ]
+ }
+}

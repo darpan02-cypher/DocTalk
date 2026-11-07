@@ -1,0 +1,64 @@
+{
+ "chart_id": "chart-onc-adult-01",
+ "age": 58,
+ "sex": "male",
+ "synthetic": true,
+ "entries": [
+  {
+   "entry_id": "cond-colon",
+   "resource_type": "Condition",
+   "display": "Colon adenocarcinoma, stage III",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "cond-afib",
+   "resource_type": "Condition",
+   "display": "Atrial fibrillation",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "cond-dpn",
+   "resource_type": "Condition",
+   "display": "Diabetic peripheral neuropathy",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "proc-colectomy",
+   "resource_type": "Procedure",
+   "display": "Partial colectomy",
+   "status": "completed",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "med-warfarin",
+   "resource_type": "MedicationRequest",
+   "display": "Warfarin",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "med-lisinopril",
+   "resource_type": "MedicationRequest",
+   "display": "Lisinopril",
+   "status": "active",
+   "date": null,
+   "fhir": null
+  },
+  {
+   "entry_id": "obs-lymph",
+   "resource_type": "Observation",
+   "display": "3 of 14 lymph nodes positive",
+   "status": "final",
+   "date": null,
+   "fhir": null
+  }
+ ]
+}

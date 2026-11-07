@@ -1,0 +1,117 @@
+{
+ "checklist_id": "onc_adult_treatment_visit",
+ "version": "0.2",
+ "source": "Draft checklist for a new adjuvant-treatment-plan visit (stage III colon cancer). Topics drawn from: ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432); SPIKES bad-news protocol (Baile et al., Oncologist 2000); NCCN Colon Cancer guideline (adjuvant section; current version not checked); ASCO/IDSA outpatient fever and neutropenia guideline (Taplitz et al., J Clin Oncol 2018). All items UNVERIFIED.",
+ "items": [
+  {
+   "id": "patient_perception",
+   "label": "Asked what the patient knows and wants to know",
+   "description": "Before giving results, clinician asks what the patient already understands and how much detail they want.",
+   "example_questions": [
+    "What have you been told so far?",
+    "How much would you like me to explain?"
+   ],
+   "guideline_ref": "ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432); SPIKES steps P and I (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. Not in the source as a numbered rule; drawn from its core-skills section and SPIKES."
+  },
+  {
+   "id": "dx_stage",
+   "label": "Diagnosis and stage explained",
+   "description": "Clinician states the diagnosis and stage in plain words.",
+   "example_questions": [
+    "Here is what the pathology showed..."
+   ],
+   "guideline_ref": "SPIKES step K; ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432) (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. "
+  },
+  {
+   "id": "treatment_intent",
+   "label": "Goal of treatment",
+   "description": "Clinician says what the treatment is for (here: lower the chance the cancer comes back).",
+   "example_questions": [
+    "The goal of chemotherapy is..."
+   ],
+   "guideline_ref": "ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432) (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. "
+  },
+  {
+   "id": "regimen",
+   "label": "Treatment, schedule and where it is given",
+   "description": "Regimen name, how often, how long, where, and what goes home with the patient.",
+   "example_questions": [
+    "How often, for how long, and where?"
+   ],
+   "guideline_ref": "NCCN Colon Cancer guideline, adjuvant therapy for stage III (CAPEOX or FOLFOX, about 3 to 6 months by risk) (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. Duration by risk was seen only in secondary summaries; check the current NCCN version."
+  },
+  {
+   "id": "side_effects",
+   "label": "Common side effects",
+   "description": "Clinician names the common side effects, including nerve symptoms (numbness, tingling) with oxaliplatin.",
+   "example_questions": [
+    "What side effects should you expect?"
+   ],
+   "guideline_ref": "NCCN Colon Cancer guideline; oxaliplatin neuropathy reported in IDEA trial summaries (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. Neuropathy rates seen only in secondary summaries."
+  },
+  {
+   "id": "when_to_call",
+   "label": "When and who to call",
+   "description": "Clinician says which signs (fever of 100.4 F / 38.0 C or higher, bleeding, vomiting) need an immediate call or emergency visit, and the number to use.",
+   "example_questions": [
+    "What temperature means call us right away?",
+    "Who answers at night?"
+   ],
+   "guideline_ref": "ASCO/IDSA outpatient management of fever and neutropenia (Taplitz et al., J Clin Oncol 2018, DOI 10.1200/JCO.2017.77.6211) (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. Fever thresholds (38.3 C single, 38.0 C sustained) seen in search summaries of the guideline; patient wording is from a provincial fever card."
+  },
+  {
+   "id": "options",
+   "label": "Other options, trials, second opinion",
+   "description": "Clinician mentions alternatives (for example another regimen or length), clinical trials and the option of a second opinion.",
+   "example_questions": [
+    "Are there other options?"
+   ],
+   "guideline_ref": "ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432): patients should be made aware of all treatment options, including clinical trials (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. "
+  },
+  {
+   "id": "goals_values",
+   "label": "What matters to the patient",
+   "description": "Clinician asks about work, family and priorities, and sets the plan around them.",
+   "example_questions": [
+    "What matters most to you in the next months?"
+   ],
+   "guideline_ref": "ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432): shared agenda-setting and values (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. "
+  },
+  {
+   "id": "support",
+   "label": "Support and cost of care",
+   "description": "Clinician names who will help (nurse navigator, social work) and raises cost.",
+   "example_questions": [
+    "Who can help with scheduling, costs or rides?"
+   ],
+   "guideline_ref": "ASCO Patient-Clinician Communication consensus guideline (Gilligan et al., J Clin Oncol 2017;35:3618-3632, PMID 28892432): cost of care and support (topic source, unverified)",
+   "guideline_quote": null,
+   "verification_status": "UNVERIFIED",
+   "verification_note": "Topic is taken from the cited source, but the recommendation text was NOT read line by line and the item is NOT clinician-reviewed. "
+  }
+ ]
+}

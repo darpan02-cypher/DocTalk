@@ -19,7 +19,7 @@ import streamlit.components.v1 as components
 
 from demo.backend import EngineBackend, ScriptedBackend, load_chart, load_flag_plan, load_script
 from src import config
-from src.pack import load_checklist, load_profiles
+from src.modules import DEFAULT_MODULE, MODULES
 from src.schemas import PlanItem
 from src.stt_deepgram import LiveSTT, orb_html
 
@@ -38,8 +38,8 @@ TYPE_BADGE = {"missed_question": "flag-gap", "unanswered_concern": "flag-conc",
 GAP_CHECKS = {"Red-flag Qs": "missed_question", "Concerns": "unanswered_concern",
               "Chart check": "chart_contradiction", "Comprehension": "comprehension_breakdown"}
 LIVE_TYPES = {"chart_contradiction", "comprehension_breakdown"}  # the only types shown during the visit
-SPEAKER_CLS = {"clinician": "doc", "patient": "pat", "caregiver": "care"}
-SPEAKER_NAME = {"clinician": "DOCTOR", "patient": "PATIENT", "caregiver": "CAREGIVER"}
+SPEAKER_CLS = {"clinician": "doc", "patient": "pat", "caregiver": "care", "child": "kid"}
+SPEAKER_NAME = {"clinician": "DOCTOR", "patient": "PATIENT", "caregiver": "CAREGIVER", "child": "CHILD"}
 INPUTS = ["Typed", "Browser mic"]  # fallbacks; the orb is the live (Deepgram) capture
 MUTED = "color:var(--muted)"
 
@@ -70,7 +70,7 @@ label[data-baseweb="radio"] input:checked + div, label[data-baseweb="radio"] > d
 .row.partial {opacity:.55; font-style:italic;}
 .ts {color:var(--ts); font-size:.78rem; min-width:34px; padding-top:2px;}
 .badge {font-size:.64rem; font-weight:700; color:#fff; padding:3px 8px; border-radius:3px; letter-spacing:.05em; min-width:72px; text-align:center;}
-.doc{background:#2f6b57;} .pat{background:#4a5fa8;} .care{background:#b9702a;}
+.doc{background:#2f6b57;} .pat{background:#4a5fa8;} .care{background:#b9702a;} .kid{background:#c2478a;}
 .flag-chart{background:#c0392b;} .flag-comp{background:#d68910;} .flag-gap{background:#0B6E6E;} .flag-conc{background:#8e44ad;}
 .txt {flex:1; color:var(--ink);}
 .kv {display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line2);}
@@ -104,9 +104,12 @@ div[data-testid="stButton"] button[kind="primary"] {background:var(--pribg); bor
 
 # ------------------------------------------------------------------- data
 @st.cache_resource
-def _static():
-    profs = {k: v for k, v in load_profiles().items() if not v.caregiver_present}  # mock visit has no caregiver
-    return load_checklist(), profs, load_chart(), load_script()
+def _static(module_key: str):
+    m = MODULES[module_key]
+    profs = m.profiles()
+    if module_key == "chest_pain":  # the chest-pain mock visit has no caregiver
+        profs = {k: v for k, v in profs.items() if not v.caregiver_present}
+    return m.checklist(), profs, m.chart(), m.script()
 
 
 @st.cache_resource
@@ -114,19 +117,24 @@ def _stt() -> LiveSTT:
     return LiveSTT()
 
 
-checklist, profiles, chart, script = _static()
-stt = _stt()
 ss = st.session_state
+ss.setdefault("module", DEFAULT_MODULE)
+if ss.module not in MODULES:
+    ss.module = DEFAULT_MODULE
+module = MODULES[ss.module]
+checklist, profiles, chart, script = _static(ss.module)
+stt = _stt()
 
 
 def new_backend(kind: str, profile_id: str, mode: str):
     args = (script["visit_id"], chart, checklist, profiles[profile_id])
+    fp = module.flag_plan()
     if kind == "Scripted":
-        return ScriptedBackend(*args)
+        return ScriptedBackend(*args, gc=module.gap_checks(), plan=fp)
     from src.llm.client import LLMClient
 
-    plan = [PlanItem(**p) for p in load_flag_plan()["plan_items"]]
-    return EngineBackend(*args, llm=LLMClient(mode=config.Mode(mode)), plan_items=plan)
+    plan = [PlanItem(**p) for p in fp["plan_items"]]
+    return EngineBackend(*args, llm=LLMClient(mode=config.Mode(mode)), plan_items=plan, gc=module.gap_checks(), plan=fp)
 
 
 def start_visit() -> None:
@@ -145,11 +153,12 @@ DEV = st.query_params.get("dev") == "1"  # ?dev=1 brings back the rehearsal and 
 ss.setdefault("kind", os.environ.get("DRL_BACKEND", "Scripted"))  # Scripted | Engine
 ss.setdefault("mode", os.environ.get("DRL_MODE", "DEMO"))  # Engine only: DEMO (cache) | LIVE
 ss.setdefault("run_mode", "Live" if (ss.kind, ss.mode) == ("Engine", "LIVE") else "Demo")
-ss.setdefault("profile_id", next(iter(profiles)))
+if ss.get("profile_id") not in profiles:
+    ss.profile_id = next(iter(profiles))
 ss.setdefault("input", "Typed")
 ss.setdefault("view", "Clinician")
 ss.setdefault("det", {k: True for k in GAP_CHECKS})
-if "be" not in ss:
+if "be" not in ss or ss.pop("module_changed", False):
     start_visit()
 
 
@@ -183,6 +192,8 @@ def left_panel() -> None:
     cited = {e.ref for f in be.flags for e in f.evidence if e.source == "chart"}
     cited_names = [e.display for e in chart.entries if e.entry_id in cited]
     tiles = [("Age", str(chart.age)), ("Sex", chart.sex.title()), ("Hearing", p.hearing_level.title()), ("Literacy", p.literacy.title())]
+    if p.child_present:
+        tiles[2:] = [("Who is here", "Child + parent"), ("Summaries", "Parent + child")]
     tile_html = "".join(f'<div class="tile"><small>{k}</small><span>{html.escape(v)}</span></div>' for k, v in tiles)
     body = (f'<div style="font-size:1.25rem;font-weight:700;color:var(--ink)">{chart.age}-year-old {chart.sex}</div>'
             f'<div style="color:var(--muted2);margin-bottom:10px">{html.escape(p.label)} · synthetic chart</div>'
@@ -205,8 +216,8 @@ def left_panel() -> None:
             rows += f'<div class="tick miss-final">✖ {html.escape(it.label)} — not asked</div>'
         else:
             rows += f'<div class="tick miss">○ {html.escape(it.label)}</div>'
-    rows += '<div style="margin-top:8px;font-size:.72rem;color:var(--muted)">2021 AHA/ACC chest pain guideline.</div>'
-    st.markdown(panel("Chest-pain checklist coverage", rows), unsafe_allow_html=True)
+    rows += f'<div style="margin-top:8px;font-size:.72rem;color:var(--muted)">{html.escape(module.source_note)}</div>'
+    st.markdown(panel(module.checklist_title, rows), unsafe_allow_html=True)
 
 
 def transcript_panel(live: bool) -> None:
@@ -276,8 +287,47 @@ def flags_panel() -> None:
                 refresh()
 
 
+def glossary_panel() -> None:
+    """Curated plain-language meanings for terms that actually appeared in the visit. Not generated."""
+    gl = module.glossary()
+    if not gl or not ss.be.turns:
+        return
+    text = " ".join(t.text.lower() for t in ss.be.turns)
+    hits = [(k, v["plain"]) for k, v in gl.items() if any(a.lower() in text for a in [k, *v.get("aliases", [])])]
+    if hits:
+        rows = "".join(f'<div class="row"><span class="txt"><b>{html.escape(k)}</b>: {html.escape(d)}</span></div>' for k, d in hits)
+        st.markdown(panel("Words you heard", rows, pad=False), unsafe_allow_html=True)
+
+
+def call_card_panel() -> None:
+    card = module.prep().get("call_card")
+    if card:
+        st.markdown(panel("Who to call (fill in before you leave)", html.escape(card).replace(chr(10), "<br>")), unsafe_allow_html=True)
+
+
+def prepare_view() -> None:
+    prep = module.prep()
+    if not prep:
+        st.markdown(panel("Prepare for the visit", f'<span style="{MUTED}">No preparation list for this module yet.</span>'), unsafe_allow_html=True)
+        return
+    st.markdown('<div class="banner">Prepare, do not decide. This list helps you ask. It does not give medical advice.</div>', unsafe_allow_html=True)
+    worries = st.text_area("What are you most worried about? One per line.", key="worries", height=110)
+    mine = [w.strip() for w in worries.splitlines() if w.strip()]
+    if mine:
+        st.markdown(panel("Your own questions", "".join(f'<div class="row"><span class="txt">☐ {html.escape(w)}</span></div>' for w in mine), pad=False), unsafe_allow_html=True)
+    st.markdown(f'<div class="panel-b" style="{MUTED}">{html.escape(prep.get("intro", ""))}</div>', unsafe_allow_html=True)
+    for g in prep["groups"]:
+        st.markdown(panel(g["title"], "".join(f'<div class="row"><span class="txt">☐ {html.escape(q)}</span></div>' for q in g["questions"]), pad=False), unsafe_allow_html=True)
+    if prep.get("child_note"):
+        st.markdown(f'<div class="banner">{html.escape(prep["child_note"])}</div>', unsafe_allow_html=True)
+    call_card_panel()
+    printable = "\n".join(["Questions for my visit", "", *[f"[ ] {w}" for w in mine], *[f"[ ] {q}" for g in prep["groups"] for q in g["questions"]], "", prep.get("call_card", "")])
+    st.download_button("Download list (text)", printable, file_name="visit_questions.txt")
+
+
 def patient_view() -> None:
     be, p = ss.be, profiles[ss.profile_id]
+    glossary_panel()
     if not be.ended:
         st.markdown(panel("Patient summary", f'<span style="{MUTED}">Your summary appears here when the visit ends.</span>'), unsafe_allow_html=True)
         return
@@ -294,9 +344,15 @@ def patient_view() -> None:
         document.getElementById('r').onclick=()=>{{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=0.85;speechSynthesis.speak(u)}};
         document.getElementById('s').onclick=()=>speechSynthesis.cancel();</script>"""
     components.html(read_aloud, height=60)
-    qs = ["In your own words, when do you come back to the clinic?", "What will you do if the pain gets worse?"]
-    body = "".join(f'<div class="row"><span class="txt">{qs[i % 2]}</span></div>' for i in range(p.teach_back_questions))
+    if p.child_present and be.child_summary:
+        cg = f"{be.child_summary_grade:.1f}" if be.child_summary_grade is not None else "n/a"
+        st.markdown(panel("For your child",
+            f'<div style="font-size:1.25rem;line-height:1.7">{html.escape(be.child_summary).replace(chr(10), "<br>")}</div>'
+            f'<small style="{MUTED}">Reading grade {cg} (target {p.child_summary_grade:g} or lower). Say only what was said in the visit.</small>'), unsafe_allow_html=True)
+    qs = list(module.teach_back) or ["In your own words, what are the next steps?"]
+    body = "".join(f'<div class="row"><span class="txt">{qs[i % len(qs)]}</span></div>' for i in range(p.teach_back_questions))
     st.markdown(panel("Say it back", body, pad=False), unsafe_allow_html=True)
+    call_card_panel()
 
 
 def evaluation_view() -> None:
@@ -321,14 +377,14 @@ def input_controls() -> None:
     mode = ss.input if DEV else "Typed"
     if not DEV:
         with st.expander("Type instead"):
-            speaker = st.radio("Speaking now", ["clinician", "patient"], horizontal=True, key="speaker")
+            speaker = st.radio("Speaking now", list(module.speakers), horizontal=True, key="speaker")
             with st.form("typed", clear_on_submit=True):
                 text = st.text_input("Type a line", key="typed_text")
                 if st.form_submit_button("Send line"):
                     add_turn(speaker, text)
                     refresh()
         return
-    speaker = st.radio("Speaking now (typed / browser mic)", ["clinician", "patient"], horizontal=True, key="speaker")
+    speaker = st.radio("Speaking now (typed / browser mic)", list(module.speakers), horizontal=True, key="speaker")
     if mode == "Typed":
         with st.form("typed", clear_on_submit=True):
             text = st.text_input("Type a line", key="typed_text")
@@ -375,7 +431,7 @@ def right_panel() -> None:
     st.markdown('<div class="side-h">Patient</div>', unsafe_allow_html=True)
     st.selectbox("Profile", list(profiles), key="profile_id", format_func=lambda k: profiles[k].label, label_visibility="collapsed")
     st.markdown('<div class="side-h">View</div>', unsafe_allow_html=True)
-    st.radio("View", ["Clinician", "Patient"] + (["Evaluation"] if DEV else []), horizontal=True, key="view", label_visibility="collapsed")
+    st.radio("View", ["Prepare", "Clinician", "Patient"] + (["Evaluation"] if DEV else []), horizontal=True, key="view", label_visibility="collapsed")
     if ss.get("_view_seen", ss.view) != ss.view:  # the main panels live in another fragment, so redraw the whole page
         ss._view_seen = ss.view
         st.rerun()
@@ -417,7 +473,9 @@ def console() -> None:
         with L:
             left_panel()
         with M:
-            if ss.view == "Patient":
+            if ss.view == "Prepare":
+                prepare_view()
+            elif ss.view == "Patient":
                 patient_view()
             elif ss.view == "Evaluation":
                 evaluation_view()
@@ -463,7 +521,14 @@ def apply_run_mode() -> None:
     start_visit()
 
 
-_logo, _mode, _tog = st.columns([5, 4, 1], vertical_alignment="center")
+def apply_module() -> None:
+    ss.profile_id = None  # the top of the next run picks the new module's first profile
+    ss.module_changed = True
+
+
+_logo, _mod, _mode, _tog = st.columns([4, 3, 4, 1], vertical_alignment="center")
+_mod.selectbox("Condition module", list(MODULES), key="module", format_func=lambda k: MODULES[k].label,
+               label_visibility="collapsed", on_change=apply_module)
 _logo.image(str(ROOT / "landing" / "logo" / "doctalk-logo.jpg"), width=200)
 with _mode:
     st.segmented_control("Run mode", ["Demo", "Live"], key="run_mode", label_visibility="collapsed", on_change=apply_run_mode,
