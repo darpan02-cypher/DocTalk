@@ -1,6 +1,6 @@
 {
  "visit_id": "demo-roleplay-01",
- "wrap_up_turn": 18,
+ "wrap_up_turn": 12,
  "profile_id": "hoh_lowlit_alone",
  "expected": [
   {
@@ -12,21 +12,21 @@
   {
    "type": "unanswered_concern",
    "turn_indices": [
-    5
+    3
    ],
    "note": "Fear of a heart attack acknowledged, not addressed."
   },
   {
    "type": "unanswered_concern",
    "turn_indices": [
-    21
+    15
    ],
    "note": "Daughter question never answered."
   },
   {
    "type": "chart_contradiction",
    "turn_indices": [
-    15
+    9
    ],
    "chart_entry_id": "proc-stent",
    "note": "Denies heart procedure; chart lists a stent."
@@ -34,21 +34,21 @@
   {
    "type": "comprehension_breakdown",
    "turn_indices": [
-    17
+    11
    ],
    "note": "Does not remember procedure; not explained."
   },
   {
    "type": "comprehension_breakdown",
    "turn_indices": [
-    19
+    13
    ],
    "note": "Asks for transfer plan again; not restated."
   },
   {
    "type": "comprehension_breakdown",
    "turn_indices": [
-    21
+    15
    ],
    "note": "Confused by too much info; no simplification or teach-back."
   }

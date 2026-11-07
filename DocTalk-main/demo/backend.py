@@ -7,6 +7,7 @@ EngineBackend: the real engine (process_turn / finalize / SummaryAgent) on a DEM
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -50,23 +51,51 @@ class Backend:
     def end_visit(self) -> None:  # pragma: no cover - interface
         raise NotImplementedError
 
+    @staticmethod
+    def _words(s: str) -> list[str]:
+        return re.findall(r"[a-z0-9]+", s.lower().replace("’", "'").replace("'", ""))
+
+    def _anchor(self, quote: str | None, fallback: int) -> int:
+        """Turn that actually contains the quote (speech-to-text splits and rewords lines, so script indices drift).
+
+        Falls back to the scripted index, clamped to a turn that exists."""
+        q = self._words(quote or "")
+        best, best_r = None, 0.0
+        for t in self.turns:
+            tw = set(self._words(t.text))
+            r = sum(w in tw for w in q) / len(q) if q else 0.0
+            if r > best_r:
+                best, best_r = t.idx, r
+        if best is not None and best_r >= 0.75:
+            return best
+        return min(fallback, max(len(self.turns) - 1, 0))
+
     def _gap_flag(self, i: int, f: dict, at: int) -> Flag:
+        ev = []
+        for e in f["evidence"]:
+            e = dict(e)
+            if e["source"] == "transcript":
+                e["ref"] = str(self._anchor(e.get("quote"), int(e["ref"])))
+            ev.append(e)
         return Flag.model_validate(
-            {"flag_id": f"gap-{i}", "visit_id": self.visit_id, "type": f["type"], "evidence": f["evidence"],
+            {"flag_id": f"gap-{i}", "visit_id": self.visit_id, "type": f["type"], "evidence": ev,
              "rationale": f["rationale"], "verified": True, "raised_at_turn": at}
         )
 
     def apply_live_gap_checks(self) -> None:
         """Hardcoded live checks (chart contradiction, comprehension breakdown, checklist ticks).
 
-        They appear by turn count only, never by what was said: a flag with trigger_turn N shows once N+1 turns exist.
+        A flag with trigger_turn N shows once N+1 turns exist, whatever was said. Its transcript evidence is anchored to the turn whose text matches the quote.
         Omission checks (missed question, unanswered concern) wait for End visit.
         """
         gc, n = load_gap_checks(), len(self.turns)
-        have = {f.flag_id for f in self.flags}
-        for i, f in enumerate(gc["flags"]):
-            if f["trigger_turn"] is not None and n > f["trigger_turn"] and f"gap-{i}" not in have:
-                self.flags.append(self._gap_flag(i, f, n - 1))
+        dismissed = {f.flag_id for f in self.flags if f.dismissed}
+        # rebuilt every turn so each flag re-anchors to the real turn once the line is actually spoken
+        self.flags = [
+            self._gap_flag(i, f, n - 1).model_copy(update={"dismissed": f"gap-{i}" in dismissed})
+            for i, f in enumerate(gc["flags"])
+            if f["trigger_turn"] is not None and n > f["trigger_turn"]
+        ]
         self.coverage = {k: v for k, v in gc["coverage"].items() if n > v}
 
     def apply_gap_checks(self) -> None:

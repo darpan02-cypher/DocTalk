@@ -1,14 +1,14 @@
 {
- "note": "Hardcoded output of the 4 gap checks (missed_question, unanswered_concern, comprehension_breakdown, chart_contradiction) for the chest-pain module. Applied at End visit regardless of what was actually said, so every run shows identical results. trigger_turn is only used by the scripted backend to surface chart/comprehension flags live; null = shown at end. Transcript refs are turn indices of demo/script.json.",
+ "note": "Hardcoded output of the 4 gap checks (missed_question, unanswered_concern, comprehension_breakdown, chart_contradiction) for the chest-pain module. Applied at End visit regardless of what was actually said, so every run shows identical results. trigger_turn is only used by the scripted backend to surface chart/comprehension flags live; null = shown at end. Transcript refs are turn indices of demo/script.json (16 turns).",
  "flags": [
   {
-   "trigger_turn": 15,
+   "trigger_turn": 9,
    "type": "chart_contradiction",
    "rationale": "The patient said she has never had heart surgery, but the chart lists a coronary stent.",
    "evidence": [
     {
      "source": "transcript",
-     "ref": "15",
+     "ref": "9",
      "quote": "I’ve never had heart surgery."
     },
     {
@@ -19,25 +19,25 @@
    ]
   },
   {
-   "trigger_turn": 17,
+   "trigger_turn": 11,
    "type": "comprehension_breakdown",
    "rationale": "The patient does not remember the heart procedure and says her daughter keeps track. It was not explained or checked with her.",
    "evidence": [
     {
      "source": "transcript",
-     "ref": "17",
+     "ref": "11",
      "quote": "I don’t remember that."
     }
    ]
   },
   {
-   "trigger_turn": 19,
+   "trigger_turn": 13,
    "type": "comprehension_breakdown",
    "rationale": "The patient asked where she is going, and the transfer plan was not repeated.",
    "evidence": [
     {
      "source": "transcript",
-     "ref": "19",
+     "ref": "13",
      "quote": "I’m sorry, I didn’t catch the last part."
     }
    ]
@@ -60,7 +60,7 @@
    "evidence": [
     {
      "source": "transcript",
-     "ref": "5",
+     "ref": "3",
      "quote": "I’m frightened something similar might happen to me."
     }
    ]
@@ -72,7 +72,7 @@
    "evidence": [
     {
      "source": "transcript",
-     "ref": "21",
+     "ref": "15",
      "quote": "Will my daughter be able to come with me?"
     }
    ]
@@ -84,19 +84,19 @@
    "evidence": [
     {
      "source": "transcript",
-     "ref": "21",
+     "ref": "15",
      "quote": "I get confused when there’s too much information."
     }
    ]
   }
  ],
  "coverage": {
-  "onset": 3,
-  "nature": 5,
-  "exertional": 7,
-  "dyspnea": 9,
-  "syncope": 11,
-  "risk_factors": 13
+  "onset": 1,
+  "nature": 3,
+  "exertional": 5,
+  "dyspnea": 5,
+  "syncope": 7,
+  "risk_factors": 9
  },
  "clarify": [
   "Ask: are you sweating when the pressure comes on?",
