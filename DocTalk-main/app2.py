@@ -9,6 +9,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import re
 import time
 from pathlib import Path
 
@@ -102,6 +103,14 @@ div[data-testid="stButton"] button[kind="primary"] {background:var(--pribg); bor
 .hero h1{margin:0 0 8px; font-size:2.4rem; color:#fff;} .hero p{font-size:1.05rem; color:#d8e0ff; max-width:760px;}
 .card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:18px 20px; height:100%;}
 .card h4{margin:0 0 6px; color:var(--ink);} .card p{margin:0; color:var(--ink2); font-size:.9rem;}
+.nextsteps{background:var(--tile); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin:0 0 14px;}
+.nextsteps-title{font-size:.76rem; font-weight:700; letter-spacing:.12em; color:var(--ink); text-transform:uppercase; margin-bottom:12px;}
+.nextstep{display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-top:1px solid var(--line2);}
+.nextstep:nth-child(2){border-top:0; padding-top:0;}
+.nextstep-num{display:flex; align-items:center; justify-content:center; flex:0 0 28px; height:28px; border-radius:50%; background:var(--chip); color:var(--accent2); font-weight:700; font-size:.85rem;}
+.nextstep.today .nextstep-num{background:var(--accent2); color:#fff;}
+.nextstep-copy{flex:1; color:var(--ink2); font-size:.96rem; line-height:1.5; padding-top:2px;}
+.nextstep-tag{display:inline-block; margin:2px 0 0 8px; padding:2px 8px; border-radius:10px; background:var(--warnbg); color:var(--warntx); font-size:.65rem; font-weight:700; letter-spacing:.06em; vertical-align:2px;}
 .hit{background:var(--hit);}
 .scroll{height:430px; overflow-y:auto; display:flex; flex-direction:column-reverse;}  /* column-reverse keeps it pinned to the newest line */
 </style>
@@ -371,6 +380,23 @@ def patient_view() -> None:
     body = (f'<div style="font-size:1.15rem;line-height:1.6">{html.escape(be.summary).replace(chr(10), "<br>")}</div>'
             f'<small style="{MUTED}">Reading grade {g} (target {p.summary_target_grade:g} or lower) · {len(be.summary.split())} words (limit {p.summary_max_words})</small>')
     st.markdown(panel("Patient summary", body), unsafe_allow_html=True)
+    steps = _plan_steps(be.summary)
+    if steps:
+        rows = []
+        for i, step in enumerate(steps, 1):
+            timing = re.search(r"\b(today|right away|immediately|now)\b", step, re.IGNORECASE)
+            urgent = timing is not None
+            cls = "nextstep today" if urgent else "nextstep"
+            tag = f'<span class="nextstep-tag">{timing.group(1).upper()}</span>' if timing else ""
+            rows.append(
+                f'<div class="{cls}"><span class="nextstep-num">{i}</span>'
+                f'<div class="nextstep-copy">{html.escape(step)}{tag}</div></div>'
+            )
+        st.markdown(
+            '<div class="nextsteps"><div class="nextsteps-title">Your next steps</div>'
+            + "".join(rows) + "</div>",
+            unsafe_allow_html=True,
+        )
     read_aloud = f"""<button id=r style="font-size:18px;padding:8px 16px">🔊 Read aloud</button>
         <button id=s style="font-size:18px;padding:8px 16px">⏹ Stop</button>
         <script>const t={json.dumps(be.summary).replace("</", "<\\/")};
@@ -386,6 +412,39 @@ def patient_view() -> None:
     body = "".join(f'<div class="row"><span class="txt">{qs[i % len(qs)]}</span></div>' for i in range(p.teach_back_questions))
     st.markdown(panel("Say it back", body, pad=False), unsafe_allow_html=True)
     call_card_panel()
+
+
+def _plan_steps(summary: str) -> list[str]:
+    """Read numbered actions from the plan section without inventing new advice."""
+    in_plan = False
+    steps = []
+    for line in summary.splitlines():
+        text = line.strip()
+        lower = text.lower()
+        if not in_plan:
+            if lower.startswith(("your plan:", "plan:")):
+                in_plan = True
+            continue
+        if not text:
+            if steps:
+                break
+            continue
+        if lower.startswith(("questions to ask:", "questions:", "call for help", "get help")):
+            break
+        marker = text[:1]
+        if marker.isdigit():
+            dot = text.find(". ")
+            close = text.find(") ")
+            cut = dot + 2 if dot >= 0 else close + 2 if close >= 0 else 0
+            if cut:
+                steps.append(text[cut:].strip())
+            elif steps:
+                break
+        elif marker in "-•" and len(text) > 1:
+            steps.append(text[1:].strip())
+        elif steps:
+            break
+    return steps
 
 
 def evaluation_view() -> None:
