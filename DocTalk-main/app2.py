@@ -52,8 +52,8 @@ def speaker_label(role: str) -> str:
 
 # ------------------------------------------------------------------- styling
 THEMES = {
-    "light": "--bg:#e6f2ec;--card:#fff;--ink:#12332f;--ink2:#25504a;--muted:#7f968f;--muted2:#5d7a73;--line:#cfe3da;--line2:#e5f0eb;--tile:#f0f8f4;--chip:#dcefe7;--accent2:#0B6E6E;--ts:#3e8f87;--hit:#fff1ec;--warnbg:#fdece6;--warntx:#b24a2f;--pribg:#d6efe7;--pribd:#7cc4b8;--pritx:#0B6E6E;--banbg:#fff6dd;--banbd:#f0d98a;--bantx:#7a5d00;",
-    "dark": "--bg:#0f1524;--card:#182036;--ink:#e6ebf7;--ink2:#c3cce4;--muted:#7f8aa8;--muted2:#98a3c0;--line:#2a3554;--line2:#222c47;--tile:#1f2944;--chip:#26335a;--accent2:#9db4ff;--ts:#8fa6ff;--hit:#3a1f26;--warnbg:#3d1f24;--warntx:#ff9a8f;--pribg:#12344a;--pribd:#2a7fa8;--pritx:#7fd0f5;--banbg:#3a3114;--banbd:#6b5a1f;--bantx:#f1d27a;",
+    "light": "--bg:#e6f2ec;--card:#fff;--ink:#12332f;--ink2:#25504a;--muted:#7f968f;--muted2:#5d7a73;--line:#cfe3da;--line2:#e5f0eb;--tile:#f0f8f4;--chip:#dcefe7;--accent2:#0B6E6E;--ts:#3e8f87;--hit:#fff1ec;--warnbg:#fdece6;--warntx:#b24a2f;--pribg:#d6efe7;--pribd:#7cc4b8;--pritx:#0B6E6E;--banbg:#fff6dd;--banbd:#f0d98a;--bantx:#7a5d00;--g-missed:#2a78d6;--g-concern:#eb6834;--g-comp:#1baf7a;--g-chart:#eda100;",
+    "dark": "--bg:#0f1524;--card:#182036;--ink:#e6ebf7;--ink2:#c3cce4;--muted:#7f8aa8;--muted2:#98a3c0;--line:#2a3554;--line2:#222c47;--tile:#1f2944;--chip:#26335a;--accent2:#9db4ff;--ts:#8fa6ff;--hit:#3a1f26;--warnbg:#3d1f24;--warntx:#ff9a8f;--pribg:#12344a;--pribd:#2a7fa8;--pritx:#7fd0f5;--banbg:#3a3114;--banbd:#6b5a1f;--bantx:#f1d27a;--g-missed:#3987e5;--g-concern:#d95926;--g-comp:#199e70;--g-chart:#c98500;",
 }
 theme = "dark" if st.session_state.get("dark") else "light"
 st.markdown("<style>:root{" + THEMES[theme] + "}</style>", unsafe_allow_html=True)
@@ -78,7 +78,11 @@ label[data-baseweb="radio"] input:checked + div, label[data-baseweb="radio"] > d
 .ts {color:var(--ts); font-size:.78rem; min-width:34px; padding-top:2px;}
 .badge {font-size:.64rem; font-weight:700; color:#fff; padding:3px 8px; border-radius:3px; letter-spacing:.05em; min-width:72px; text-align:center;}
 .doc{background:#2f6b57;} .pat{background:#4a5fa8;} .care{background:#b9702a;} .kid{background:#c2478a;}
-.flag-chart{background:#c0392b;} .flag-comp{background:#d68910;} .flag-gap{background:#0B6E6E;} .flag-conc{background:#8e44ad;}
+.flag-chart{background:var(--g-chart); color:#1a1300;} .flag-comp{background:var(--g-comp); color:#04170f;} .flag-gap{background:var(--g-missed);} .flag-conc{background:var(--g-concern);}
+.donut-wrap{text-align:center; padding:6px 0 2px;} .donut-wrap svg{width:168px; height:168px; display:block; margin:0 auto 10px;}
+.dn-row{display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid var(--line2); font-size:.88rem; color:var(--ink2);}
+.dn-sw{width:10px; height:10px; border-radius:2px; flex:0 0 10px;} .dn-name{flex:1; text-align:left;}
+.dn-n{font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; min-width:22px; text-align:right;} .dn-pct{color:var(--muted); min-width:40px; text-align:right; font-variant-numeric:tabular-nums; font-size:.8rem;}
 .txt {flex:1; color:var(--ink);}
 .kv {display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line2);}
 .kv b {font-size:.72rem; letter-spacing:.1em; color:var(--accent2); text-transform:uppercase;}
@@ -118,8 +122,7 @@ div[data-testid="stButton"] button[kind="primary"] {background:var(--pribg); bor
 
 
 # ------------------------------------------------------------------- data
-@st.cache_resource
-def _static(module_key: str):
+def _static(module_key: str):  # not cached: cached model objects go stale when Streamlit reloads src/ after an edit
     m = MODULES[module_key]
     profs = m.profiles()
     if module_key == "chest_pain":  # the chest-pain mock visit has no caregiver
@@ -174,7 +177,14 @@ if ss.get("profile_id") not in profiles:
     ss.profile_id = next(iter(profiles))
 ss.setdefault("input", "Typed")
 ss.setdefault("view", "Clinician")
+if ss.view not in ("Clinician", "Patient", "Evaluation"):  # e.g. a session from before Prepare moved into the Patient view
+    ss.view = "Clinician"
 ss.setdefault("det", {k: True for k in GAP_CHECKS})
+from src.schemas import PatientProfile as _PP  # noqa: E402
+
+if ss.get("_schema_cls") is not _PP:  # src/ was reloaded since this session's backend was built: its objects are stale
+    ss._schema_cls = _PP
+    ss.pop("be", None)
 if "be" not in ss or ss.pop("module_changed", False):
     start_visit()
 
@@ -210,17 +220,18 @@ def scripted() -> bool:
 def autoplay_step() -> None:
     """Scripted mode: feed the prepared script one turn at a time, then end the visit. No microphone is used."""
     be = ss.be
-    if be.ended or not ss.playing or time.time() - ss.last_tick < SPEEDS[ss.get("speed", "Normal")]:
+    if be.ended:
         return
-    ss.last_tick = time.time()
     turns = script["turns"]
-    if ss.script_pos < len(turns):
-        t = turns[ss.script_pos]
-        add_turn(t["speaker"], t["text"])
-        ss.script_pos += 1
-    else:
+    if ss.script_pos >= len(turns):  # every line has been played, whether by auto-play, Pause or Next line
         be.end_visit()
         st.rerun()  # full rerun: closes the live fragments and shows the wrap-up
+    if not ss.playing or time.time() - ss.last_tick < SPEEDS[ss.get("speed", "Normal")]:
+        return
+    ss.last_tick = time.time()
+    t = turns[ss.script_pos]
+    add_turn(t["speaker"], t["text"])
+    ss.script_pos += 1
 
 
 # --------------------------------------------------------------------- console
@@ -347,7 +358,7 @@ def call_card_panel() -> None:
         st.markdown(panel("Who to call (fill in before you leave)", html.escape(card).replace(chr(10), "<br>")), unsafe_allow_html=True)
 
 
-def prepare_view() -> None:
+def prepare_view(show_call_card: bool = True) -> None:
     prep = module.prep()
     if not prep:
         st.markdown(panel("Prepare for the visit", f'<span style="{MUTED}">No preparation list for this module yet.</span>'), unsafe_allow_html=True)
@@ -362,16 +373,55 @@ def prepare_view() -> None:
         st.markdown(panel(g["title"], "".join(f'<div class="row"><span class="txt">☐ {html.escape(q)}</span></div>' for q in g["questions"]), pad=False), unsafe_allow_html=True)
     if prep.get("child_note"):
         st.markdown(f'<div class="banner">{html.escape(prep["child_note"])}</div>', unsafe_allow_html=True)
-    call_card_panel()
+    if show_call_card:
+        call_card_panel()
     printable = "\n".join(["Questions for my visit", "", *[f"[ ] {w}" for w in mine], *[f"[ ] {q}" for g in prep["groups"] for q in g["questions"]], "", prep.get("call_card", "")])
     st.download_button("Download list (text)", printable, file_name="visit_questions.txt")
+
+
+DONUT_TYPES = [  # fixed order: colour follows the gap type, never its rank
+    ("missed_question", "Missed question", "var(--g-missed)"),
+    ("unanswered_concern", "Unanswered concern", "var(--g-concern)"),
+    ("comprehension_breakdown", "Comprehension breakdown", "var(--g-comp)"),
+    ("chart_contradiction", "Chart contradiction", "var(--g-chart)"),
+]
+
+
+def gap_donut_html(flags) -> str:
+    """Donut of gaps caught per checker. Dismissal is a clinician decision and does not change what was caught."""
+    counts = {k: sum(1 for f in flags if f.type.value == k) for k, _, _ in DONUT_TYPES}
+    total = sum(counts.values())
+    r, sw, gap = 46.0, 13.0, 2.0
+    circ = 2 * 3.141592653589793 * r
+    segs, used = "", 0.0
+    for k, name, color in DONUT_TYPES:
+        n = counts[k]
+        if not n:
+            continue
+        ln = circ * n / total
+        dash = max(ln - (gap if sum(1 for v in counts.values() if v) > 1 else 0), 0.5)
+        segs += (f'<circle cx="60" cy="60" r="{r}" fill="none" stroke="{color}" stroke-width="{sw}" stroke-dasharray="{dash:.2f} {circ - dash:.2f}" '
+                 f'stroke-dashoffset="{-used:.2f}" transform="rotate(-90 60 60)"><title>{name}: {n} of {total}</title></circle>')
+        used += ln
+    svg = (f'<svg viewBox="0 0 120 120" role="img" aria-label="Gaps caught: {total} in total">'
+           f'<circle cx="60" cy="60" r="{r}" fill="none" stroke="var(--line2)" stroke-width="{sw}"/>{segs}'
+           f'<text x="60" y="61" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)">{total}</text>'
+           f'<text x="60" y="76" text-anchor="middle" font-size="8.5" fill="var(--muted2)" letter-spacing=".6">TOTAL</text></svg>')
+    rows = ""
+    for k, name, color in DONUT_TYPES:
+        n = counts[k]
+        pct = f"{round(100 * n / total)}%" if total else "–"
+        rows += (f'<div class="dn-row"><span class="dn-sw" style="background:{color}"></span><span class="dn-name">{name}</span>'
+                 f'<span class="dn-n">{n}</span><span class="dn-pct">{pct}</span></div>')
+    return f'<div class="donut-wrap">{svg}</div><div>{rows}</div>'
 
 
 def patient_view() -> None:
     be, p = ss.be, profiles[ss.profile_id]
     glossary_panel()
     if not be.ended:
-        st.markdown(panel("Patient summary", f'<span style="{MUTED}">Your summary appears here when the visit ends.</span>'), unsafe_allow_html=True)
+        st.markdown(panel("Before your visit", f'<span style="{MUTED}">Write down your questions now. When the visit ends, your summary and next steps appear on this page.</span>'), unsafe_allow_html=True)
+        prepare_view()
         return
     if not be.summary:
         st.markdown(panel("Patient summary", f'<span style="{MUTED}">The summary could not be written (model unavailable).</span>'), unsafe_allow_html=True)
@@ -412,6 +462,8 @@ def patient_view() -> None:
     body = "".join(f'<div class="row"><span class="txt">{qs[i % len(qs)]}</span></div>' for i in range(p.teach_back_questions))
     st.markdown(panel("Say it back", body, pad=False), unsafe_allow_html=True)
     call_card_panel()
+    with st.expander("Your questions from before the visit"):
+        prepare_view(show_call_card=False)
 
 
 def _plan_steps(summary: str) -> list[str]:
@@ -538,7 +590,7 @@ def right_panel() -> None:
     st.markdown('<div class="side-h">Patient</div>', unsafe_allow_html=True)
     st.selectbox("Profile", list(profiles), key="profile_id", format_func=lambda k: profiles[k].label, label_visibility="collapsed")
     st.markdown('<div class="side-h">View</div>', unsafe_allow_html=True)
-    st.radio("View", ["Prepare", "Clinician", "Patient"] + (["Evaluation"] if DEV else []), horizontal=True, key="view", label_visibility="collapsed")
+    st.radio("View", ["Clinician", "Patient"] + (["Evaluation"] if DEV else []), horizontal=True, key="view", label_visibility="collapsed")
     if ss.get("_view_seen", ss.view) != ss.view:  # the main panels live in another fragment, so redraw the whole page
         ss._view_seen = ss.view
         st.rerun()
@@ -557,6 +609,9 @@ def right_panel() -> None:
         ss._mode_seen = ss.run_mode
         st.rerun()
     ss._mode_seen = ss.run_mode
+
+    if be.ended:
+        st.markdown(panel("Gaps caught", gap_donut_html(be.flags)), unsafe_allow_html=True)
 
     if DEV:
         st.markdown('<div class="side-h">Dev: gap checks</div>', unsafe_allow_html=True)
@@ -606,9 +661,7 @@ def console() -> None:
                 ss._module_seen = ss.module
                 st.rerun()
             ss._module_seen = ss.module
-            if ss.view == "Prepare":
-                prepare_view()
-            elif ss.view == "Patient":
+            if ss.view == "Patient":
                 patient_view()
             elif ss.view == "Evaluation":
                 evaluation_view()
@@ -623,7 +676,7 @@ def console() -> None:
                         f'<div class="kv"><b>Phase</b><span>{phase}</span></div>'
                         + (f'<div class="kv"><b>Engine notes</b><span>{html.escape("; ".join(be.errors))}</span></div>' if be.errors else "")),
                         unsafe_allow_html=True)
-                if stt.error:
+                if stt.error and not scripted():  # scripted playback never opens the microphone
                     st.error(stt.error)
                 transcript_panel(live)
                 input_controls()
@@ -644,7 +697,7 @@ def console() -> None:
             if not HOSTED:
                 stt.start()
                 components.html(orb_html(bool(ss.get("dark"))), height=170)  # outside the fragments so it never remounts
-                st.caption("Tap the orb to start live captions. First voice heard is the doctor, the second the patient.")
+                st.caption("")
         else:
             st.markdown('<div class="orb-wrap"><div class="orb off"></div><div class="orb-label off">VISIT ENDED</div></div>', unsafe_allow_html=True)
         side()

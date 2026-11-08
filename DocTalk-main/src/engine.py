@@ -64,7 +64,9 @@ def _verify(errors: list[str], verifier: VerifierAgent, f: Flag, *args) -> Flag 
 
 
 def new_state(visit_id: str, profile: PatientProfile) -> VisitState:
-    return VisitState(visit_id=visit_id, profile=profile)
+    # Re-validate from plain fields: after a hot reload the caller's profile can be an instance of an older copy of the class.
+    data = profile.model_dump() if hasattr(profile, "model_dump") else profile
+    return VisitState(visit_id=visit_id, profile=data)
 
 
 def _event_key(f: Flag) -> tuple:

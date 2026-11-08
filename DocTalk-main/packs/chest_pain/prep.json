@@ -1,0 +1,38 @@
+{
+ "intro": "Write down your questions before the visit. Bring this list. You do not have to remember everything.",
+ "groups": [
+  {
+   "title": "Describing what is happening",
+   "questions": [
+    "When did it start, and what makes it better or worse?",
+    "Where do I feel it, and does it spread anywhere?",
+    "Do I also have sweating, shortness of breath, nausea or dizziness?"
+   ]
+  },
+  {
+   "title": "Your history and medicines",
+   "questions": [
+    "Which of my past heart problems or procedures should I mention?",
+    "Which of my medicines matter for this?",
+    "Does anyone in my family have heart disease?"
+   ]
+  },
+  {
+   "title": "Tests and next steps",
+   "questions": [
+    "What do you think could be causing this, and what tests do I need?",
+    "Where will I go for the tests, and who takes me?",
+    "Can my family member come with me?",
+    "Is it okay to drive, exercise or work for now?"
+   ]
+  },
+  {
+   "title": "Safety",
+   "questions": [
+    "What should I do if the pain comes back or gets worse?",
+    "Who do I call, and what number do I use at night?"
+   ]
+  }
+ ],
+ "call_card": "Ask your care team to fill this in before you leave.\nCall emergency services right away if: ____________\nClinic number: ____________   Night/weekend number: ____________"
+}
